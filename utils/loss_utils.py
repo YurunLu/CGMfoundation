@@ -9,8 +9,8 @@ def forecast_loss(pred_forecast, true_forecast, forecast_mask, delta=0.2):
     """
     #diff = pred_forecast - true_forecast
     #mask = forecast_mask.bool()
-    #loss = F.smooth_l1_loss(pred_forecast[mask], true_forecast[mask], beta=delta)
-    #loss = F.l1_loss(pred_forecast[mask], true_forecast[mask])
     mask = forecast_mask.unsqueeze(-1).expand_as(true_forecast)
-    loss = F.l1_loss(pred_forecast * mask, true_forecast * mask, reduction='sum') / mask.sum().clamp_min(1.0)
-    return loss
+    #loss = F.smooth_l1_loss(pred_forecast * mask, true_forecast * mask, beta=delta) / mask.sum().clamp_min(1.0)
+    loss_mae = F.l1_loss(pred_forecast * mask, true_forecast * mask, reduction='sum') / mask.sum().clamp_min(1.0)
+    loss_mse = F.mse_loss(pred_forecast * mask, true_forecast * mask, reduction='sum') / mask.sum().clamp_min(1.0)
+    return loss_mae

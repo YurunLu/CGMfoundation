@@ -9,11 +9,11 @@ from utils.train_utils import WarmupCosineScheduler
 
 def run_pretrain_forecast(data_csv="data/2022-06_1.csv",
                           device="cuda",
-                          epochs=300,
+                          epochs=3000,
                           batch_size=128,
                           patch_size=36,
                           stride=6,
-                          forecast_steps=6,
+                          forecast_steps=12,
                           embed_dim=128,
                           save_dir="checkpoints"):
 

@@ -3,21 +3,46 @@ import torch.nn as nn
 import torch.nn.functional as F
 import math
 
-# --- Sin/Cos Positional Embedding (not learnable) ---
-class SinCosPositionalEncoding(nn.Module):
-    def __init__(self, dim, max_len=4096):
+# --- Temporal Embedding (Time-of-day + Day index) ---
+class TemporalEmbedding(nn.Module):
+    """
+    Adds learned embeddings for:
+      - time-of-day (288 points per day for 5-min CGM)
+      - day index (e.g., up to 12 days)
+    Both are added to the patch embeddings.
+    """
+    def __init__(self, embed_dim, steps_per_day=288, max_seq_len=3456, dropout=0.1):
         super().__init__()
-        pe = torch.zeros(max_len, dim)
-        pos = torch.arange(0, max_len).unsqueeze(1)
-        div_term = torch.exp(torch.arange(0, dim, 2) * (-math.log(10000.0) / dim))
-        pe[:, 0::2] = torch.sin(pos * div_term)
-        pe[:, 1::2] = torch.cos(pos * div_term)
-        self.register_buffer('pe', pe)
+        self.steps_per_day = steps_per_day
+        self.num_days = math.ceil(max_seq_len / steps_per_day)
+        self.time_emb = nn.Embedding(steps_per_day, embed_dim)
+        self.day_emb = nn.Embedding(self.num_days, embed_dim)
+        self.dropout = nn.Dropout(dropout)
 
-    def forward(self, x):
-        """x: [B, N, D]"""
-        return x + self.pe[:x.size(1)].unsqueeze(0)
+    def forward(self, x, start_idx=0, stride=1):
+        """
+        x: [B, N, D]  (patch embeddings)
+        start_idx: index (in time steps) of first patch, typically 0
+        stride: hop length between patches (in 5-min steps)
+        """
+        device = x.device
+        N = x.size(1)
 
+        # absolute index of each patch center (approximation)
+        abs_idx = torch.arange(N, device=device) * stride + start_idx
+
+        # time within the day (0..287)
+        time_idx = abs_idx % self.steps_per_day
+        # which day (0..num_days-1)
+        day_idx = abs_idx // self.steps_per_day
+
+        time_vec = self.time_emb(time_idx)    # [N, D]
+        day_vec  = self.day_emb(day_idx)      # [N, D]
+        out = x + time_vec.unsqueeze(0) + day_vec.unsqueeze(0)
+        return self.dropout(out)
+
+
+# --- Patch Aggregator ---
 class PatchAggregator(nn.Module):
     def __init__(self, embed_dim, hidden_dim=64):
         super().__init__()
@@ -34,11 +59,12 @@ class PatchAggregator(nn.Module):
         w = torch.softmax(w, dim=1)
         return (x * w.permute(0, 2, 1)).sum(dim=-1)  # [B, E]
 
+
 # --- Base Model ---
 class CGMBaseModel(nn.Module):
     """
     CGM Foundation Model (Forecast version)
-    - CNN encoder → positional embedding → causal Transformer → forecast head
+    - CNN encoder → temporal embedding → causal Transformer → forecast head
     """
     def __init__(self,
                  patch_size=36,
@@ -59,12 +85,11 @@ class CGMBaseModel(nn.Module):
             nn.GELU(),
             nn.Conv1d(embed_dim // 2, embed_dim, 6, stride=1, padding=2),
             nn.GELU(),
-            #nn.AdaptiveAvgPool1d(1),
         )
         self.patch_agg = PatchAggregator(embed_dim)
 
-        # Position encoding
-        self.pos_emb = SinCosPositionalEncoding(embed_dim, max_len=max_seq_len)
+        # --- Replace sinusoidal with temporal embedding ---
+        self.temporal_emb = TemporalEmbedding(embed_dim, steps_per_day=288, max_seq_len=max_seq_len)
 
         # Causal transformer
         enc_layer = nn.TransformerEncoderLayer(
@@ -83,16 +108,20 @@ class CGMBaseModel(nn.Module):
         # Forecast head
         self.forecast_head = nn.Linear(embed_dim, forecast_size)
 
-    def forward(self, patches):
+    def forward(self, patches, start_idx=0, stride=1):
         """
         patches: [B, N, P]
-        return: forecast for each patch [B, N, P]
+        return: forecast for each patch [B, N, forecast_size]
         """
         B, N, P = patches.shape
         x = self.cnn(patches.view(B * N, 1, P))  # [B*N, E, P]
-        #x = F.adaptive_avg_pool1d(x, 1).squeeze(-1).view(B, N, self.embed_dim)
         x = self.patch_agg(x).view(B, N, self.embed_dim)
-        #x = self.pos_emb(x)
+
+        # Add day/time embedding
+        x = self.temporal_emb(x, start_idx=start_idx, stride=stride)
+
+        # Transformer encoder with causal mask
         x = self.transformer(x, mask=self.causal_mask[:N, :N])
+
         forecast = self.forecast_head(x)
         return forecast
