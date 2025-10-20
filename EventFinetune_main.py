@@ -151,7 +151,7 @@ def main():
                 patches.to(device), events.to(device), targets.to(device), mask.to(device)
             )
             optimizer.zero_grad(set_to_none=True)
-            preds = model(patches, events, start_idx=0, stride=args.stride)
+            preds = model(patches, events)
             loss = masked_mae_loss(preds, targets, mask)
             loss.backward()
             torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
