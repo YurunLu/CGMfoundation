@@ -108,7 +108,7 @@ class CGMBaseModel(nn.Module):
         # Forecast head
         self.forecast_head = nn.Linear(embed_dim, forecast_size)
 
-    def forward(self, patches, start_idx=0, stride=1):
+    def forward(self, patches, start_idx=0, stride=1, return_embedding=False):
         """
         patches: [B, N, P]
         return: forecast for each patch [B, N, forecast_size]
@@ -122,6 +122,7 @@ class CGMBaseModel(nn.Module):
 
         # Transformer encoder with causal mask
         x = self.transformer(x, mask=self.causal_mask[:N, :N])
-
+        if return_embedding:
+            return x
         forecast = self.forecast_head(x)
         return forecast

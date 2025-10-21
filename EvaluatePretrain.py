@@ -41,7 +41,7 @@ def evaluate_model(model, loader, device):
 
 def main():
     # ==== Config ====
-    csv_path = "data/data_withevent_top1k.csv"
+    csv_path = "data/PUHP_CGM.csv"
     checkpoint_path = "checkpoints/best_forecast_20251012_140643_dim128_patch36_stride6.pt"
     device = "cuda" if torch.cuda.is_available() else "cpu"
     patch_size = 36
