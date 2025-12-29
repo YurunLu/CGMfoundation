@@ -88,6 +88,10 @@ class CGMBaseModel(nn.Module):
         )
         self.patch_agg = PatchAggregator(embed_dim)
 
+        # Try another local encoder
+
+        #self.local_encoder = nn.Sequential(nn.Linear(self.patch_size, self.embed_dim),nn.GELU())
+
         # --- Replace sinusoidal with temporal embedding ---
         self.temporal_emb = TemporalEmbedding(embed_dim, steps_per_day=288, max_seq_len=max_seq_len)
 
@@ -114,8 +118,11 @@ class CGMBaseModel(nn.Module):
         return: forecast for each patch [B, N, forecast_size]
         """
         B, N, P = patches.shape
+
         x = self.cnn(patches.view(B * N, 1, P))  # [B*N, E, P]
         x = self.patch_agg(x).view(B, N, self.embed_dim)
+        # Try another local encoder with one-layer MLP
+        # x = self.local_encoder(patches)
 
         # Add day/time embedding
         x = self.temporal_emb(x, start_idx=start_idx, stride=stride)

@@ -19,7 +19,7 @@ def fill_nan_lin(x: np.ndarray) -> np.ndarray:
     if good.sum() == 1:
         x[isnan] = float(x[good][0])
         return x
-    x[isnan] = np.interp(idx[isnan], idx[good], x[good])
+    x[isnan] = np.interp(idx[isnan], idx[good], x[good]).astype(np.float32)
     return x
 
 class CGMForecastDataset(Dataset):

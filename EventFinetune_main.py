@@ -60,7 +60,6 @@ def evaluate(model, dataloader, device):
             events = events.to(device)
             targets = targets.to(device)
             mask = mask.to(device)
-
             preds = model(patches, events)
             loss = masked_mae_loss(preds, targets, mask)
             total_loss += loss.item() * patches.shape[0]

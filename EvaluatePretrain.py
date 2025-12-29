@@ -38,7 +38,8 @@ def evaluate_model(model, loader, device):
           f"| Hypo [Acc={hypo['acc']:.3f}, F1={hypo['f1']:.3f}]")
     return results
 
-
+# best_forecast_20251012_140643_dim128_patch36_stride6.pt
+# best_forecast_20251106_194359_dim128_patch36_stride6
 def main():
     # ==== Config ====
     csv_path = "data/PUHP_CGM.csv"
