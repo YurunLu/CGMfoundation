@@ -27,12 +27,15 @@ def load_model(ckp_path, device):
     model.eval()
     return model
 
+# 2022-06_1
+# best_forecast_20251012_140643_dim128_patch36_stride6
+# dnb_metrics
 
 @torch.no_grad()
 def main(
-    data_csv="data/2022-06_1.csv",
+    data_csv="data/Multicenter.csv",
     ckp_path="checkpoints/best_forecast_20251012_140643_dim128_patch36_stride6.pt",
-    out_csv="Results/dnb_metrics.csv",
+    out_csv="Results/Multicenter_dnb_metrics.csv",
     patch_size=36,
     stride=12,
     batch_size=64,
@@ -51,7 +54,7 @@ def main(
     cgm_cols = [str(i) for i in range(1, 3456)]
     data_all = df[cgm_cols].to_numpy(dtype=np.float32)
 
-    keep = np.where(np.isnan(data_all).sum(axis=1) < 0.7 * data_all.shape[1])[0]
+    keep = np.where(np.isnan(data_all).sum(axis=1) < 0.9 * data_all.shape[1])[0]
     data = data_all[keep]
     kept_ids = raw_ids[keep]
 
