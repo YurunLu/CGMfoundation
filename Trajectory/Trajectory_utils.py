@@ -266,6 +266,78 @@ class VisitEmbeddingExtractor(nn.Module):
             return self.rep.projector(z)  # NOT normalized
         return z
 
+class VisitEmbeddingExtractorMeanPool(nn.Module):
+    """
+    Frozen sample representation model → visit embedding
+    using SIMPLE MEAN POOLING over patch embeddings.
+
+    This is for ablation / sanity check:
+    - no learned aggregator
+    - only encoder + (optional) projector
+    """
+    def __init__(
+        self,
+        base_ckpt_path: str,
+        sample_rep_ckpt_path: str,
+        patch_size: int = 36,
+        stride: int = 6,
+        embed_dim: int = 128,
+        max_seq_len: int = 3456,
+        proj_dim: int = 128,
+        device: str = "cpu",
+        use_projector: bool = True,
+    ):
+        super().__init__()
+        self.rep = CGMSampleRepresentationModel(
+            checkpoint_path=base_ckpt_path,
+            patch_size=patch_size,
+            embed_dim=embed_dim,
+            max_seq_len=max_seq_len,
+            proj_dim=proj_dim,
+            finetune_encoder=False,
+        )
+
+        state = torch.load(sample_rep_ckpt_path, map_location="cpu")
+        if isinstance(state, dict) and "state_dict" in state:
+            state = state["state_dict"]
+        if isinstance(state, dict) and "model" in state:
+            state = state["model"]
+
+        self.rep.load_state_dict(state, strict=False)
+        self.rep.to(device)
+
+        for p in self.rep.parameters():
+            p.requires_grad = False
+
+        self.device = device
+        self.stride = stride
+        self.use_projector = use_projector
+
+    @torch.no_grad()
+    def encode(self, patches: torch.Tensor, patch_mask: torch.Tensor) -> torch.Tensor:
+        """
+        patches: [B, N, P]
+        patch_mask: [B, N] (True = valid)
+
+        returns:
+            z: [B, D]
+        """
+        # encoder gives patch embeddings
+        x = self.rep.encoder(
+            patches,
+            stride=self.stride,
+            return_embedding=True
+        )  # [B, N, E]
+
+        # masked mean pooling
+        mask = patch_mask.unsqueeze(-1).float()  # [B, N, 1]
+        denom = mask.sum(dim=1).clamp(min=1.0)   # [B, 1]
+        z = (x * mask).sum(dim=1) / denom        # [B, E]
+
+        if self.use_projector:
+            z = self.rep.projector(z)  # IMPORTANT: do NOT normalize
+
+        return z
 
 # ============================================================
 # Baselines (vector MSE / cosine / speed MSE)

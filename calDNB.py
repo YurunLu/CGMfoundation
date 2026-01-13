@@ -33,9 +33,9 @@ def load_model(ckp_path, device):
 
 @torch.no_grad()
 def main(
-    data_csv="data/Multicenter.csv",
+    data_csv="data/Colas.csv",
     ckp_path="checkpoints/best_forecast_20251012_140643_dim128_patch36_stride6.pt",
-    out_csv="Results/Multicenter_dnb_metrics.csv",
+    out_csv="Results/Colas_dnb_metrics.csv",
     patch_size=36,
     stride=12,
     batch_size=64,

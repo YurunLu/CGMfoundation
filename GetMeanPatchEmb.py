@@ -11,9 +11,9 @@ def setup_args():
     class Args: pass
     args = Args()
 
-    args.data_csv = "data/2022-06_1.csv"
+    args.data_csv = "data/Colas.csv"                                # 2022-06_1.csv
     args.ckp_path = "checkpoints/best_forecast_20251012_140643_dim128_patch36_stride6.pt"   # forecast-pretrained checkpoint
-    args.output_csv = "Results/sample_embeddings_mean.csv"
+    args.output_csv = "Results/Emb-Colas_meanpool.csv"    #Emb-SIBIONICS-2022-06_1_meanpool
 
     args.device = "cuda" if torch.cuda.is_available() else "cpu"
     args.batch_size = 128
@@ -58,7 +58,7 @@ def main(args):
     # --------------------------------------------------
     df = pd.read_csv(args.data_csv, index_col=0)
     data = df[[str(i) for i in range(1, 3456)]]
-    data = data[data.notna().sum(axis=1) > 3456 / 2]
+    data = data[data.notna().sum(axis=1) > 3456* 0.1]
     data_np = data.to_numpy().astype(np.float32)
 
     dataset = CGMForecastDataset(

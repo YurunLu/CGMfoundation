@@ -14,6 +14,7 @@ from Trajectory.Trajectory_utils import (
     CGMTrajectoryDataset,
     pad_collate,
     VisitEmbeddingExtractor,
+    VisitEmbeddingExtractorMeanPool,
     compute_baselines,
     compute_losses_twohead,
 )
@@ -157,8 +158,8 @@ def train():
     val_loader   = DataLoader(val_ds,   batch_size=args.batch_size, shuffle=False, num_workers=2, collate_fn=pad_collate)
     test_loader  = DataLoader(test_ds,  batch_size=args.batch_size, shuffle=False, num_workers=2, collate_fn=pad_collate)
 
-    # Frozen extractor
-    extractor = VisitEmbeddingExtractor(
+    # Frozen extractor  VisitEmbeddingExtractorMeanPool VisitEmbeddingExtractor
+    extractor = VisitEmbeddingExtractorMeanPool(
         base_ckpt_path=args.base_ckpt,
         sample_rep_ckpt_path=args.sample_rep_ckpt,
         patch_size=args.patch_size,
@@ -167,7 +168,7 @@ def train():
         max_seq_len=args.max_seq_len,
         proj_dim=args.proj_dim,
         device=device,
-        use_projector=True,
+        use_projector=False,
     ).to(device)
     extractor.eval()
 
@@ -203,7 +204,7 @@ def train():
     best_score = float("inf")
     best_epoch = -1
     bad_epochs = 0
-    best_path = os.path.join(args.out_dir, "best_twohead.pt")
+    best_path = os.path.join(args.out_dir, "best_twohead_meanpoolrep.pt")
 
     # Model selection: direction is primary
     # val_score = l_dir
