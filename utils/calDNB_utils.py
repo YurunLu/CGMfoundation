@@ -38,9 +38,9 @@ def dnb_sd_batch(emb, mask, eps=1e-8):
     return: [B]
     """
     m = mask.unsqueeze(-1)                # [B,T,1]
-    var_t = masked_var(emb, m, dim=1, eps=eps)  # [B,D]
+    var_t = masked_var(emb, m, dim=2, eps=eps)  # [B,D]
     std_t = torch.sqrt(var_t.clamp_min(eps))
-    return std_t.mean(dim=1)              # [B]
+    return std_t.mean(dim=1),std_t.max(dim=1).values          # [B]
 
 
 def dnb_pcc_batch(emb, mask, eps=1e-6):
@@ -67,7 +67,7 @@ def dnb_pcc_batch(emb, mask, eps=1e-6):
     C = C.clamp(min=-1.0, max=1.0)
 
     idx = torch.triu_indices(D, D, offset=1, device=emb.device)
-    return C[:, idx[0], idx[1]].abs().mean(dim=1)
+    return C[:, idx[0], idx[1]].abs().mean(dim=1), C[:, idx[0], idx[1]].abs().max(dim=1).values
 
 
 # ==========================================

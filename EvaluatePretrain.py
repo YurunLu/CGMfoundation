@@ -25,11 +25,18 @@ def evaluate_model(model, loader, device):
     targets = torch.cat(all_targets, dim=0)
     masks = torch.cat(all_masks, dim=0)
     loss = forecast_loss(preds, targets, masks)
-    # --- Use your metric helper (same as pretrain) ---
     results = compute_forecast_metrics(preds, targets, masks)
     grouped = results["grouped_mae"]
     hyper, hypo = results["hyper"], results["hypo"]
 
+    se = torch.abs(preds - targets)
+    rse = se/targets
+    se = se.mean(dim=2)
+    rse = rse.mean(dim=2)
+    mae_per_patch = ((se * masks).sum(dim=(0)) /masks.sum(dim=(0)).clamp_min(1.0))
+    rmae_per_patch = ((rse * masks).sum(dim=(0)) / masks.sum(dim=(0)).clamp_min(1.0))
+    results['mae_per_patch']=mae_per_patch
+    results['rmae_per_patch'] = rmae_per_patch
     print(f"[Eval] Loss={loss.item():.4f} "
           f"| MAE(0–10)={grouped.get('0-10min',0):.3f} "
           f"| MAE(10–30)={grouped.get('10-30min',0):.3f} "
@@ -86,6 +93,8 @@ def main():
     }]).to_csv(result_path, index=False)
     print(f"💾 Saved summary to {result_path}")
     '''
+    pd.DataFrame(results['mae_per_patch']).to_csv('mae_per_patch.csv')
+    pd.DataFrame(results['rmae_per_patch']).to_csv('rmae_per_patch.csv')
 
 
 if __name__ == "__main__":

@@ -99,22 +99,26 @@ def main(
 
         emb = model(patches, return_embedding=True)   # [B,T,D]
 
-        sd = dnb_sd_batch(emb, mask)
-        pcc = dnb_pcc_batch(emb, mask)
+        sd_mean,sd_max = dnb_sd_batch(emb, mask)
+        pcc_mean,pcc_max = dnb_pcc_batch(emb, mask)
         lyap = lyap_proxy_jacobian_batch(emb, mask, ridge=ridge)
 
-        sd = sd.cpu().numpy()
-        pcc = pcc.cpu().numpy()
+        sd_mean = sd_mean.cpu().numpy()
+        sd_max = sd_max.cpu().numpy()
+        pcc_mean = pcc_mean.cpu().numpy()
+        pcc_max = pcc_max.cpu().numpy()
         lyap = lyap.cpu().numpy()
         n_valid = mask.sum(dim=1).cpu().numpy().astype(int)
 
-        B = len(sd)
+        B = len(sd_mean)
         for b in range(B):
             records.append({
                 "sample_id": kept_ids[processed + b],   # 🔑 raw CSV id
                 "num_patches": int(n_valid[b]),
-                "dnb_sd": float(sd[b]),
-                "dnb_pcc": float(pcc[b]),
+                "dnb_sd": float(sd_mean[b]),
+                "dnb_sdmax": float(sd_max[b]),
+                "dnb_pcc": float(pcc_mean[b]),
+                "dnb_pccmax": float(pcc_max[b]),
                 "lyap_proxy_log_smaxA": float(lyap[b]),
             })
 

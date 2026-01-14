@@ -14,9 +14,9 @@ from SampleRepresentation.sample_representation_utils import CGMSampleContrastiv
 def setup_args():
     class Args: pass
     args = Args()
-    args.data_csv = "data/SIBIONICS_Dup_T2D.csv"
+    args.data_csv = "data/Zhao_data.csv"   # 2022-06_1.csv Colas Multicenter Zhao_data
     args.model_ckpt = "checkpoints_sample_rep/best_sample_rep.pt"
-    args.output_csv = "Results/Emb-SIBIONICS_Dup_T2D.csv"
+    args.output_csv = "Results/Emb-Zhao_cont.csv"
 
     args.device = "cuda" if torch.cuda.is_available() else "cpu"
     args.batch_size = 128
@@ -34,7 +34,7 @@ def main(args):
     # --------------------------------------------------
     df = pd.read_csv(args.data_csv, index_col=0)
     data = df[[str(i) for i in range(1, 3456)]]
-    data = data[data.notna().sum(axis=1) > 3456 / 2]
+    data = data[data.notna().sum(axis=1) > 3456 *0.1]
     data_np = data.to_numpy().astype(np.float32)
 
     dataset = CGMSampleContrastiveDataset(

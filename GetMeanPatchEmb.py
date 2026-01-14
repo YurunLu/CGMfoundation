@@ -11,9 +11,9 @@ def setup_args():
     class Args: pass
     args = Args()
 
-    args.data_csv = "data/Colas.csv"                                # 2022-06_1.csv
+    args.data_csv = "data/Zhao_data.csv"                                # 2022-06_1.csv Colas Multicenter Zhao_data
     args.ckp_path = "checkpoints/best_forecast_20251012_140643_dim128_patch36_stride6.pt"   # forecast-pretrained checkpoint
-    args.output_csv = "Results/Emb-Colas_meanpool.csv"    #Emb-SIBIONICS-2022-06_1_meanpool
+    args.output_csv = "Results/Emb-Zhao_meanpool.csv"    #Emb-SIBIONICS-2022-06_1_meanpool Emb-Colas_meanpool Emb-Zhao_meanpool.csv
 
     args.device = "cuda" if torch.cuda.is_available() else "cpu"
     args.batch_size = 128
@@ -85,7 +85,7 @@ def main(args):
     # Extract mean patch embeddings
     # --------------------------------------------------
     all_embeddings = []
-
+    print(len(loader))
     for patches, patch_mask, _, _ in loader:
         patches = patches.to(args.device)           # [B, N, P]
         patch_mask = patch_mask.to(args.device)     # [B, N]
@@ -96,7 +96,6 @@ def main(args):
             stride=args.stride,
             return_embedding=True,
         )
-
         mask = patch_mask.unsqueeze(-1)              # [B, N, 1]
         summed = (patch_emb * mask).sum(dim=1)       # [B, D]
         counts = mask.sum(dim=1).clamp(min=1.0)      # [B, 1]

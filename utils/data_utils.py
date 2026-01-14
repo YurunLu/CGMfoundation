@@ -70,28 +70,25 @@ class CGMForecastDataset(Dataset):
         # build samples (we keep one sample per original sequence)
         self.samples = []
         for seq in self.data:
-            # compute L_real (first trailing NaN index) using original sequence
             seq_orig = np.asarray(seq, dtype=np.float32)
-            if np.isnan(seq_orig).all():
-                # skip entirely-NaN sequences
-                self.samples.append(None)  # sentinel for empty sample; kept to preserve indexing
+
+            valid_idx = np.where(~np.isnan(seq_orig))[0]
+            if len(valid_idx) == 0:
+                self.samples.append(None)
                 continue
 
-            L_real = (np.argmax(np.isnan(seq_orig)) if np.isnan(seq_orig).any() else len(seq_orig))
-            s = fill_nan_lin(seq_orig)  # interpolated for numeric arrays
+            # Only mask trailing NaNs: L_real ends at the last observed point
+            L_real = int(valid_idx.max() + 1)
 
-            # gather patches and targets using global starts (ensures same N for all samples)
-            patches = []
-            patch_mask = []
-            targets = []
-            target_mask = []
+            # Fill all NaNs (internal + trailing) for numeric stability
+            s = fill_nan_lin(seq_orig)
+
+            patches, patch_mask, targets, target_mask = [], [], [], []
 
             for start in self.starts:
-                # slice patch and target (both will be within seq bounds by construction of starts)
                 p = s[start: start + self.patch_size].astype(np.float32)
                 t = s[start + self.patch_size: start + self.patch_size + self.forecast_steps].astype(np.float32)
 
-                # validity: fully inside the real (non-trailing-NaN) region
                 valid_patch = (start + self.patch_size) <= L_real
                 valid_target = (start + self.patch_size + self.forecast_steps) <= L_real
 
@@ -100,14 +97,13 @@ class CGMForecastDataset(Dataset):
                 targets.append(t)
                 target_mask.append(valid_target)
 
-            # convert to arrays (N may be zero)
             if len(patches) == 0:
                 self.samples.append(None)
             else:
-                patches = np.stack(patches, axis=0).astype(np.float32)      # [N, P]
-                targets = np.stack(targets, axis=0).astype(np.float32)      # [N, F]
-                patch_mask = np.array(patch_mask, dtype=bool)               # [N]
-                target_mask = np.array(target_mask, dtype=bool)             # [N]
+                patches = np.stack(patches, axis=0).astype(np.float32)
+                targets = np.stack(targets, axis=0).astype(np.float32)
+                patch_mask = np.array(patch_mask, dtype=bool)
+                target_mask = np.array(target_mask, dtype=bool)
                 self.samples.append((patches, patch_mask, targets, target_mask))
 
     def __len__(self):
