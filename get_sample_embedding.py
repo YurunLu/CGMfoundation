@@ -14,9 +14,9 @@ from SampleRepresentation.sample_representation_utils import CGMSampleContrastiv
 def setup_args():
     class Args: pass
     args = Args()
-    args.data_csv = "data/Zhao_data.csv"   # 2022-06_1.csv Colas Multicenter Zhao_data
+    args.data_csv = "data/2022-06_1.csv"   # 2022-06_1.csv Colas Multicenter Zhao_data
     args.model_ckpt = "checkpoints_sample_rep/best_sample_rep.pt"
-    args.output_csv = "Results/Emb-Zhao_cont.csv"
+    args.output_csv = "Results/Emb-SIBIONICS-2022-06_1_cont.csv" #
 
     args.device = "cuda" if torch.cuda.is_available() else "cpu"
     args.batch_size = 128
