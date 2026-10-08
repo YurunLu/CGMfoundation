@@ -1,0 +1,113 @@
+{
+  "dataset": "hpp",
+  "targets": [
+    "reg:fpg",
+    "reg:hba1c",
+    "reg:tc",
+    "reg:tg",
+    "reg:hdl",
+    "reg:ldl",
+    "reg:cr",
+    "reg:ua",
+    "reg:bu",
+    "reg:bmi",
+    "reg:age",
+    "reg:ht",
+    "reg:wt",
+    "reg:baseline_hba1c",
+    "reg:baseline_glucose",
+    "reg:baseline_creatinine",
+    "reg:y2_hba1c",
+    "reg:y2_glucose",
+    "reg:y2_creatinine",
+    "reg:y4_hba1c",
+    "reg:y4_glucose",
+    "reg:y4_creatinine",
+    {
+      "target": "baseline_label_binary",
+      "mode": "cls",
+      "task_name": "cls_binary_baseline_non_diabetes_vs_diabetes",
+      "include_values": ["Non-Diabetes", "Diabetes"],
+      "label_mapping": {
+        "Non-Diabetes": 0,
+        "Diabetes": 1
+      }
+    },
+    {
+      "target": "baseline_label_3class",
+      "mode": "cls",
+      "task_name": "cls_ternary_baseline_normal_predm_diabetes",
+      "include_values": ["Normal", "PreDM", "Diabetes"],
+      "label_mapping": {
+        "Normal": 0,
+        "PreDM": 1,
+        "Diabetes": 2
+      }
+    },
+    {
+      "target": "y2_label_binary",
+      "mode": "cls",
+      "task_name": "cls_binary_y2_non_diabetes_vs_diabetes",
+      "include_values": ["Non-Diabetes", "Diabetes"],
+      "label_mapping": {
+        "Non-Diabetes": 0,
+        "Diabetes": 1
+      }
+    },
+    {
+      "target": "y2_label_3class",
+      "mode": "cls",
+      "task_name": "cls_ternary_y2_normal_predm_diabetes",
+      "include_values": ["Normal", "PreDM", "Diabetes"],
+      "label_mapping": {
+        "Normal": 0,
+        "PreDM": 1,
+        "Diabetes": 2
+      }
+    },
+    {
+      "target": "y4_label_binary",
+      "mode": "cls",
+      "task_name": "cls_binary_y4_non_diabetes_vs_diabetes",
+      "include_values": ["Non-Diabetes", "Diabetes"],
+      "label_mapping": {
+        "Non-Diabetes": 0,
+        "Diabetes": 1
+      }
+    },
+    {
+      "target": "y4_label_3class",
+      "mode": "cls",
+      "task_name": "cls_ternary_y4_normal_predm_diabetes",
+      "include_values": ["Normal", "PreDM", "Diabetes"],
+      "label_mapping": {
+        "Normal": 0,
+        "PreDM": 1,
+        "Diabetes": 2
+      }
+    }
+  ],
+  "feature": {
+    "feature_set": "iglu",
+    "freq_minutes": 5,
+    "glucose_unit": "auto"
+  },
+  "split": {
+    "n_splits": 5,
+    "seed": 42,
+    "min_samples": 30
+  },
+  "training": {
+    "device": "cuda:0",
+    "devices": ["cuda:0", "cuda:1"],
+    "out_root": "../../outputs/gmi_iglu_lab_ridge",
+    "save_fold_predictions": true,
+    "wait_for_idle_gpus": true,
+    "idle_min_memory_gb": 8.0,
+    "idle_max_utilization": 30.0,
+    "idle_poll_seconds": 60.0
+  },
+  "ridge": {
+    "alpha_values": [0.001, 0.01, 0.1, 1.0, 10.0, 100.0, 1000.0, 10000.0]
+  }
+}

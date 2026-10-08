@@ -1,0 +1,38 @@
+{
+  "dataset": "colas",
+  "dataset_variant": "incident_t2d",
+  "targets": [
+    {
+      "target": "incident_t2d_colas_binary",
+      "mode": "cls",
+      "task_name": "cls_binary_incident_t2d_colas",
+      "include_values": ["NoIncident", "IncidentT2D"],
+      "label_mapping": {
+        "NoIncident": 0,
+        "IncidentT2D": 1
+      }
+    }
+  ],
+  "pretrain": {
+    "ckpt_path": "/path/to/your/cgmfoundation_checkpoint.pt",
+    "model_name": "cgmfoundation_lab_ridge_colas_incident_t2d"
+  },
+  "split": {
+    "n_splits": 5,
+    "seed": 42,
+    "min_samples": 10,
+    "split_root": "../../splits/lab_target_cv"
+  },
+  "runtime": {
+    "device": "cuda:0",
+    "batch_size": 8,
+    "num_workers": 0,
+    "out_root": "../../outputs/cgmfoundation_lab_ridge"
+  },
+  "embedding": {
+    "pooling": "mean"
+  },
+  "ridge": {
+    "alpha_values": [0.001, 0.01, 0.1, 1.0, 10.0, 100.0, 1000.0, 10000.0]
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "dataset": "hpp",
+  "dataset_variant": "cgmanchored_incident_180d",
+  "targets": [
+    {
+      "target": "incident_dm_cgmanchored_180d_binary",
+      "mode": "cls",
+      "task_name": "cls_binary_incident_dm_cgmanchored_180d",
+      "include_values": ["NoIncident", "IncidentDM"],
+      "label_mapping": {
+        "NoIncident": 0,
+        "IncidentDM": 1
+      }
+    }
+  ],
+  "pretrain": {
+    "ckpt_path": "/path/to/your/cgmfoundation_checkpoint.pt",
+    "model_name": "cgmfoundation_lab_hpp_cgmanchored_incident_180d"
+  },
+  "split": {
+    "n_splits": 5,
+    "seed": 42,
+    "min_samples": 10,
+    "split_root": "../../splits/lab_target_cv"
+  },
+  "training": {
+    "device": "cuda:0",
+    "epochs": 200,
+    "batch_size": 4,
+    "num_workers": 4,
+    "lr": 0.0001,
+    "weight_decay": 0.01,
+    "layer_decay": 0.7,
+    "freeze_base": true,
+    "unfreeze_after": 50,
+    "patience": 30,
+    "out_root": "../../outputs/CGMfoundation_lab",
+    "disable_compile": false
+  },
+  "model": {
+    "dropout": 0.3
+  }
+}

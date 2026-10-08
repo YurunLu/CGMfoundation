@@ -1,0 +1,35 @@
+{
+  "dataset": "colas",
+  "dataset_variant": "incident_t2d_hba1c_available",
+  "targets": [
+    {
+      "target": "incident_t2d_colas_binary",
+      "mode": "cls",
+      "task_name": "cls_binary_incident_t2d_colas",
+      "include_values": ["NoIncident", "IncidentT2D"],
+      "label_mapping": {
+        "NoIncident": 0,
+        "IncidentT2D": 1
+      }
+    }
+  ],
+  "split": {
+    "n_splits": 5,
+    "seed": 42,
+    "min_samples": 10,
+    "split_root": "../../splits/lab_target_cv"
+  },
+  "runtime": {
+    "device": "cpu",
+    "out_root": "../../outputs/label_feature_lab_ridge"
+  },
+  "feature": {
+    "feature_name": "baseline_hba1c",
+    "feature_columns": [
+      "colas_baseline_hba1c"
+    ]
+  },
+  "ridge": {
+    "alpha_values": [0.001, 0.01, 0.1, 1.0, 10.0, 100.0, 1000.0, 10000.0]
+  }
+}

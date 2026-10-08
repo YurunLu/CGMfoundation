@@ -1,0 +1,50 @@
+{
+    "runner_script": "../../GluFormer_ridge_main.py",
+    "devices": ["cuda:0", "cuda:1"],
+    "wait_for_idle_gpus": true,
+    "idle_min_memory_gb": 8.0,
+    "idle_max_utilization": 30.0,
+    "idle_poll_seconds": 60.0,
+    "log_dir": "../../outputs/gluformer_lab_ridge_scheduler/logs",
+    "common_overrides": {
+        "pretrain": {
+            "ckpt_path": "../../Model_best.pt",
+            "model_name": "gluformer_lab_ridge_all",
+            "encoding_type": "auto",
+            "n_heads": 16,
+            "max_seq_length": 25000
+        },
+        "training": {
+            "batch_size": 4,
+            "num_workers": 0,
+            "out_root": "../../outputs/gluformer_lab_ridge",
+            "save_fold_predictions": true
+        },
+        "embedding": {
+            "pooling": "last",
+            "freq_minutes": 5,
+            "glucose_unit": "auto",
+            "glucose_min_mgdl": 40,
+            "glucose_max_mgdl": 499
+        },
+        "ridge": {
+            "alpha_values": [
+                0.001, 0.01, 0.1, 1.0, 10.0, 100.0, 1000.0, 10000.0
+            ]
+        }
+    },
+    "jobs": [
+        {
+            "name": "hpp",
+            "config": "./hpp_ridge.json"
+        },
+        {
+            "name": "nicheng",
+            "config": "./nicheng_ridge.json"
+        },
+        {
+            "name": "zhao",
+            "config": "./zhao_ridge.json"
+        }
+    ]
+}

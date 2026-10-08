@@ -1,0 +1,13 @@
+{
+    "runner_script": "/workspace/last/LabelPredictionFinetune_CV_main.py",
+    "dispatch_mode": "target",
+    "devices": ["cuda:0", "cuda:1"],
+    "wait_for_idle_gpus": false,
+    "log_dir": "outputs/cgmfoundation_lab_scheduler_corrected_01_fix/logs",
+    "jobs": [
+        {
+            "name": "cgmfoundation_nicheng_corrected_01_fix",
+            "config": "/workspace/last/configs/lab_runs/cgmfoundation_nicheng_corrected_01_fix.json"
+        }
+    ]
+}

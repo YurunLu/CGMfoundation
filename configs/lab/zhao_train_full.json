@@ -1,0 +1,62 @@
+{
+    "dataset": "zhao",
+    "targets": [
+        "reg:hba1c",
+        "reg:age",
+        "reg:ht",
+        "reg:wt",
+        "reg:bmi",
+        "reg:fpg",
+        "reg:pg120",
+        "reg:cp0",
+        "reg:cp120",
+        "reg:ins0",
+        "reg:ins120",
+        "reg:ga",
+        "reg:tc",
+        "reg:tg",
+        "reg:hdl",
+        "reg:ldl",
+        "reg:cr",
+        "reg:ua",
+        "reg:bu",
+        "reg:duration",
+        "cls:type",
+        "cls:gender",
+        "cls:Macrovascular",
+        "cls:Microvascular",
+        "cls:Complication"
+    ],
+    "pretrain": {
+        "ckpt_path": "/workspace/last/best_forecast_20260420_105114_dim256_patch144_stride3.pt",
+        "model_name": "CGMfoundation_lab_zhao"
+    },
+    "split": {
+        "n_splits": 5,
+        "seed": 42,
+        "min_samples": 30,
+        "split_root": "../../data_lab/lab_target_cv"
+    },
+    "training": {
+        "device": "cuda:0",
+        "devices": ["cuda:0", "cuda:1"],
+        "epochs": 300,
+        "batch_size": 128,
+        "num_workers": 4,
+        "lr": 0.0001,
+        "weight_decay": 0.01,
+        "layer_decay": 0.7,
+        "freeze_base": true,
+        "unfreeze_after": 50,
+        "patience": 30,
+        "out_root": "../../outputs/CGMfoundation_lab",
+        "disable_compile": false,
+        "wait_for_idle_gpus": true,
+        "idle_min_memory_gb": 8.0,
+        "idle_max_utilization": 30.0,
+        "idle_poll_seconds": 60.0
+    },
+    "model": {
+        "dropout": 0.3
+    }
+}

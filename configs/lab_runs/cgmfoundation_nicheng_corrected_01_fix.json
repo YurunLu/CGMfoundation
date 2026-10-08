@@ -1,0 +1,29 @@
+{
+    "dataset": "nicheng_new",
+    "ckpt_path": "/workspace/last/best_forecast_20260428_003310_dim256_patch144_stride3.pt",
+    "targets": [
+        "cls:elevated_uacr_24",
+        "cls:parkinsons_24",
+        "cls:CKD_24",
+        "cls:cholelithiasis_24",
+        "cls:NAFLD_24",
+        "cls:cancer_24",
+        "cls:hyperlipidemia_24",
+        "cls:chronic_viral_hepatitis_24",
+        "cls:DR_24",
+        "cls:hypertension_24",
+        "cls:CHD_24"
+    ],
+    "split_root": "/workspace/last/data_lab/lab_target_cv",
+    "out_root": "outputs/cgmfoundation_lab_finetune_corrected_01_fix",
+    "force_regenerate_splits": true,
+    "epochs": 200,
+    "batch_size": 4,
+    "num_workers": 4,
+    "lr": 0.0001,
+    "weight_decay": 0.01,
+    "freeze_base": true,
+    "unfreeze_after": 9999,
+    "patience": 50,
+    "disable_compile": true
+}

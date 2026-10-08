@@ -1,0 +1,21 @@
+{
+    "runner_script": "../../LabelPredictionFinetune_CV_main.py",
+    "dispatch_mode": "target",
+    "devices": ["cuda:0", "cuda:1"],
+    "wait_for_idle_gpus": true,
+    "idle_min_memory_gb": 8.0,
+    "idle_max_utilization": 30.0,
+    "idle_poll_seconds": 60.0,
+    "log_dir": "../../outputs/CGMfoundation_lab_scheduler/logs",
+    "generated_config_dir": "../../outputs/CGMfoundation_lab_scheduler/generated_configs",
+    "jobs": [
+        {
+            "name": "zhao_train",
+            "config": "./zhao_train_full.json"
+        },
+        {
+            "name": "hpp_train",
+            "config": "./hpp_train_full.json"
+        }
+    ]
+}
