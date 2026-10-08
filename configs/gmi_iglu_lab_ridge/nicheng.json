@@ -1,0 +1,65 @@
+{
+  "dataset": "nicheng",
+  "targets": [
+    "reg:bmi",
+    "reg:hba1c",
+    "reg:ldl-ch",
+    "reg:hdl-ch",
+    "reg:pg120",
+    "reg:pg60",
+    "reg:fpg",
+    "reg:ins120",
+    "reg:ins0",
+    "reg:Age",
+    {
+      "target": "Type",
+      "mode": "cls",
+      "task_name": "cls_binary_ND_DM",
+      "include_values": ["NGT", "PreDM", "DM", "T1D", "T2D", "T2DM", "SpecialDM"],
+      "label_mapping": {
+        "NGT": 0,
+        "PreDM": 0,
+        "DM": 1,
+        "T1D": 1,
+        "T2D": 1,
+        "T2DM": 1,
+        "SpecialDM": 1
+      }
+    },
+    {
+      "target": "Type",
+      "mode": "cls",
+      "task_name": "cls_ternary_NGT_PreDM_T2D",
+      "include_values": ["NGT", "PreDM", "T2D", "T2DM"],
+      "label_mapping": {
+        "NGT": 0,
+        "PreDM": 1,
+        "T2D": 2,
+        "T2DM": 2
+      }
+    }
+  ],
+  "feature": {
+    "feature_set": "iglu",
+    "freq_minutes": 5,
+    "glucose_unit": "auto"
+  },
+  "split": {
+    "n_splits": 5,
+    "seed": 42,
+    "min_samples": 30
+  },
+  "training": {
+    "device": "cuda:0",
+    "devices": ["cuda:0", "cuda:1"],
+    "out_root": "../../outputs/gmi_iglu_lab_ridge",
+    "save_fold_predictions": true,
+    "wait_for_idle_gpus": true,
+    "idle_min_memory_gb": 8.0,
+    "idle_max_utilization": 30.0,
+    "idle_poll_seconds": 60.0
+  },
+  "ridge": {
+    "alpha_values": [0.001, 0.01, 0.1, 1.0, 10.0, 100.0, 1000.0, 10000.0]
+  }
+}

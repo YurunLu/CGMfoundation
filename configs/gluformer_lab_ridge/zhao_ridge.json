@@ -1,0 +1,61 @@
+{
+  "dataset": "zhao",
+  "targets": [
+    "reg:hba1c",
+    "reg:age",
+    "reg:ht",
+    "reg:wt",
+    "reg:bmi",
+    "reg:fpg",
+    "reg:pg120",
+    "reg:cp0",
+    "reg:cp120",
+    "reg:ins0",
+    "reg:ins120",
+    "reg:ga",
+    "reg:tc",
+    "reg:tg",
+    "reg:hdl",
+    "reg:ldl",
+    "reg:cr",
+    "reg:ua",
+    "reg:bu",
+    "reg:duration",
+    "cls:type",
+    "cls:gender",
+    "cls:Macrovascular",
+    "cls:Microvascular",
+    "cls:Complication"
+  ],
+  "pretrain": {
+    "ckpt_path": "../../Model_best.pt",
+    "model_name": "gluformer_lab_ridge_zhao",
+    "encoding_type": "auto",
+    "n_heads": 16,
+    "max_seq_length": 25000
+  },
+  "split": {
+    "n_splits": 5,
+    "seed": 42,
+    "min_samples": 30,
+    "split_root": "../../data_lab/lab_target_cv",
+    "dataset_split_root": "../../data_lab/lab_cv"
+  },
+  "training": {
+    "device": "cuda:0",
+    "batch_size": 4,
+    "num_workers": 0,
+    "out_root": "../../outputs/gluformer_lab_ridge",
+    "save_fold_predictions": true
+  },
+  "embedding": {
+    "pooling": "last",
+    "freq_minutes": 5,
+    "glucose_unit": "auto",
+    "glucose_min_mgdl": 40,
+    "glucose_max_mgdl": 499
+  },
+  "ridge": {
+    "alpha_values": [0.001, 0.01, 0.1, 1.0, 10.0, 100.0, 1000.0, 10000.0]
+  }
+}

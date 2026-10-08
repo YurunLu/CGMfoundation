@@ -1,0 +1,49 @@
+{
+    "dataset": "hpp",
+    "dataset_variant": "cgmanchored_incident_180d_hba1c_available",
+    "targets": [
+        {
+            "target": "incident_dm_cgmanchored_180d_binary",
+            "mode": "cls",
+            "task_name": "cls_binary_incident_dm_cgmanchored_180d",
+            "include_values": ["NoIncident", "IncidentDM"],
+            "label_mapping": {
+                "NoIncident": 0,
+                "IncidentDM": 1
+            }
+        }
+    ],
+    "pretrain": {
+        "ckpt_path": "/workspace/last/best_forecast_20260420_105114_dim256_patch144_stride3.pt",
+        "model_name": "cgmfoundation_lab_ridge_hpp_cgmanchored_incident_180d_hba1c_available"
+    },
+    "split": {
+        "n_splits": 5,
+        "seed": 42,
+        "min_samples": 10,
+        "split_root": "../../splits/lab_target_cv"
+    },
+    "runtime": {
+        "device": "cuda:0",
+        "batch_size": 8,
+        "num_workers": 0,
+        "out_root": "../../outputs/cgmfoundation_lab_ridge"
+    },
+    "embedding": {
+        "pooling": "mean"
+    },
+    "feature": {
+        "required_label_columns": [
+            "incident_dm_cgmanchored_180d_baseline_hba1c"
+        ]
+    },
+    "ridge": {
+        "alpha_values": [0.001, 0.01, 0.1, 1.0, 10.0, 100.0, 1000.0, 10000.0]
+    }
+}
+python -u EventFinetune_scheduler.py \
+  --gpus 0 \
+  --tasks zhao_full \
+  --pretrain_ckpt /workspace/last/best_forecast_20260428_003310_dim256_patch144_stride3.pt \
+  --out_dir data_event/event_finetune_outputs \
+  --run_name_prefix newmodel

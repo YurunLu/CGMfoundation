@@ -1,0 +1,46 @@
+{
+  "dataset": "hpp",
+  "dataset_variant": "hpp_new_lab",
+  "targets": [
+    "cls:baseline_hypertension",
+    "cls:baseline_coronary_heart_disease",
+    "cls:baseline_ckd",
+    "cls:baseline_nafld",
+    "cls:baseline_dyslipidemia",
+    "cls:baseline_depression",
+    "cls:baseline_cancer",
+    "cls:baseline_cholelithiasis",
+    "cls:baseline_anaemia",
+    "cls:2year_hypertension",
+    "cls:2year_dyslipidemia",
+    "cls:2year_cancer",
+    "cls:2year_anaemia",
+    "cls:4year_hypertension",
+    "cls:4year_dyslipidemia",
+    "cls:4year_cancer"
+  ],
+  "feature": {
+    "feature_set": "iglu_all",
+    "model_name": "iglu_all",
+    "freq_minutes": 5,
+    "glucose_unit": "auto"
+  },
+  "split": {
+    "n_splits": 5,
+    "seed": 42,
+    "min_samples": 30
+  },
+  "training": {
+    "device": "cuda:0",
+    "devices": ["cuda:0", "cuda:1"],
+    "out_root": "../../outputs/iglu_all_lab_ridge_hpp_new_lab",
+    "save_fold_predictions": true,
+    "wait_for_idle_gpus": true,
+    "idle_min_memory_gb": 8.0,
+    "idle_max_utilization": 30.0,
+    "idle_poll_seconds": 60.0
+  },
+  "ridge": {
+    "alpha_values": [0.001, 0.01, 0.1, 1.0, 10.0, 100.0, 1000.0, 10000.0]
+  }
+}

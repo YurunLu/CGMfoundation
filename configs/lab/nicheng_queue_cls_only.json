@@ -1,0 +1,16 @@
+{
+  "runner_script": "../../LabelPredictionFinetune_CV_main.py",
+  "dispatch_mode": "target",
+  "devices": ["cuda:0", "cuda:1"],
+  "wait_for_idle_gpus": true,
+  "idle_min_memory_gb": 8.0,
+  "idle_max_utilization": 30.0,
+  "idle_poll_seconds": 60.0,
+  "log_dir": "../../outputs/CGMfoundation_lab_scheduler/logs",
+  "jobs": [
+    {
+      "name": "nicheng_cls_only",
+      "config": "./nicheng_train_cls_only.json"
+    }
+  ]
+}

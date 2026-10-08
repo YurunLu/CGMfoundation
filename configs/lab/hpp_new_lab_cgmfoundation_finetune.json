@@ -1,0 +1,55 @@
+{
+  "dataset": "hpp",
+  "dataset_variant": "hpp_new_lab",
+  "targets": [
+    "cls:baseline_hypertension",
+    "cls:baseline_coronary_heart_disease",
+    "cls:baseline_ckd",
+    "cls:baseline_nafld",
+    "cls:baseline_dyslipidemia",
+    "cls:baseline_depression",
+    "cls:baseline_cancer",
+    "cls:baseline_cholelithiasis",
+    "cls:baseline_anaemia",
+    "cls:2year_hypertension",
+    "cls:2year_dyslipidemia",
+    "cls:2year_cancer",
+    "cls:2year_anaemia",
+    "cls:4year_hypertension",
+    "cls:4year_dyslipidemia",
+    "cls:4year_cancer"
+  ],
+  "pretrain": {
+    "ckpt_path": "/workspace/last/best_forecast_20260428_003310_dim256_patch144_stride3.pt",
+    "model_name": "best_forecast_20260428_003310_dim256_patch144_stride3"
+  },
+  "split": {
+    "n_splits": 5,
+    "seed": 42,
+    "min_samples": 30,
+    "split_root": "../../data_lab/lab_target_cv"
+  },
+  "training": {
+    "device": "cuda:0",
+    "devices": ["cuda:0", "cuda:1"],
+    "epochs": 200,
+    "batch_size": 4,
+    "num_workers": 4,
+    "lr": 0.0001,
+    "weight_decay": 0.01,
+    "layer_decay": 0.7,
+    "freeze_base": true,
+    "unfreeze_after": 50,
+    "patience": 30,
+    "out_root": "../../outputs/cgmfoundation_lab_finetune_hpp_new_lab",
+    "disable_compile": false,
+    "wait_for_idle_gpus": true,
+    "idle_min_memory_gb": 8.0,
+    "idle_max_utilization": 30.0,
+    "idle_poll_seconds": 60.0
+  },
+  "model": {
+    "dropout": 0.3
+  }
+}
+

@@ -1,0 +1,3 @@
+# Keep original research/config line endings.
+*.py -text
+*.json -text

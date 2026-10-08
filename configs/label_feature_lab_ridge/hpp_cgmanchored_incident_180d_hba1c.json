@@ -1,0 +1,35 @@
+{
+  "dataset": "hpp",
+  "dataset_variant": "cgmanchored_incident_180d_hba1c_available",
+  "targets": [
+    {
+      "target": "incident_dm_cgmanchored_180d_binary",
+      "mode": "cls",
+      "task_name": "cls_binary_incident_dm_cgmanchored_180d",
+      "include_values": ["NoIncident", "IncidentDM"],
+      "label_mapping": {
+        "NoIncident": 0,
+        "IncidentDM": 1
+      }
+    }
+  ],
+  "split": {
+    "n_splits": 5,
+    "seed": 42,
+    "min_samples": 10,
+    "split_root": "../../splits/lab_target_cv"
+  },
+  "runtime": {
+    "device": "cpu",
+    "out_root": "../../outputs/label_feature_lab_ridge"
+  },
+  "feature": {
+    "feature_name": "baseline_hba1c",
+    "feature_columns": [
+      "incident_dm_cgmanchored_180d_baseline_hba1c"
+    ]
+  },
+  "ridge": {
+    "alpha_values": [0.001, 0.01, 0.1, 1.0, 10.0, 100.0, 1000.0, 10000.0]
+  }
+}
