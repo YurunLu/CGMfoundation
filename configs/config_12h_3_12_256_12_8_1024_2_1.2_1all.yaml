@@ -1,0 +1,46 @@
+
+# ====== Data configuration ======
+data:
+  csv_dir: "/workspace/JTTCGMformer/CGMfoundation_gai/data/weitaiout/train_files_output"        
+  hf_dataset_dir: "/workspace/JTTCGMformer/CGMfoundaitonqueshizhichuli/data/hf_cgm_datasetall"
+  train_ratio: 0.9
+  val_ratio: 0.1
+  test_ratio: 0.0
+
+# ====== Model configuration ======
+model:
+  patch_size: 144
+  stride: 3
+  forecast_steps: 12
+  embed_dim: 256
+  max_seq_len: 3456
+  depth: 12
+  num_heads: 8
+  hidden_dim: 1024
+  dropout: 0.1
+  # Ablation flags: True enables a component; False disables it.
+  use_cnn: True
+  use_transformer: True
+  use_temporal: False  # Enable physiological time embeddings.
+  use_positional: True # Enable sinusoidal absolute positional encoding.
+
+# ====== Training configuration ======
+training:
+  epochs: 500
+  # On-the-fly patch extraction produces large GPU tensors, e.g. [B, 1100, 144].
+  # Use a batch size of 32 or 64; reduce to 32 if GPU memory is insufficient.
+  batch_size: 64  
+  lr: 0.00005
+  weight_decay: 0.05
+  warmup_steps: 80000
+  patience: 20
+  save_dir: "/workspace/JTTCGMformer/CGMfoundaitonqueshizhichuli/output/ckp/checkpoints_patch_12h_stride_3_12_embed_256_depth_12_head_8_hidden_1024_loss_2_1.2_1all_position_NANnew"
+  seed: 42
+  # Store full sequences of 3456 values on disk and extract patches during training.
+  # Consider 4-8 workers, depending on CPU and storage throughput.
+  num_workers: 8  
+
+# ====== Weights & Biases configuration ======
+wandb:
+  project_name: "CGM_Pretrain_zhongban"
+  run_name: "run_canshutansuo_patch_12h_stride_3_12_embed_256_depth_12_head_8_hidden_1024_loss_2_1.2_1all_position_NANnew" 
