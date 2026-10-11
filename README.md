@@ -71,8 +71,7 @@ the downstream checks. It is not the historical GPU pretraining environment.
 Participant datasets and pretrained checkpoints are **not distributed in this
 repository**. Pretraining can start from random initialization with your own data.
 Evaluation and workflows that use pretrained representations require a compatible
-checkpoint that you train or obtain separately. Running the code alone does not
-provide the original cohorts or reproduce the reported manuscript results.
+checkpoint that you train or obtain separately.
 
 The supplied configurations retain experiment settings and absolute server paths.
 Adapt data locations, checkpoint locations, output directories, and device options
