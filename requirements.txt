@@ -6,3 +6,7 @@ scikit-learn>=1.5,<2
 openpyxl>=3.1,<4
 XlsxWriter>=3.2,<4
 tqdm>=4.66,<5
+PyYAML>=6.0,<7
+datasets>=4.6,<5
+accelerate>=1.13,<2
+wandb>=0.25,<1

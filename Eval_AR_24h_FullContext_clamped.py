@@ -11,14 +11,14 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from models.base_model import CGMBaseModel
 from utils.data_cleaning import clean_cgm_array
 '''
-nohup env CUDA_VISIBLE_DEVICES=4 python Eval_AR_24h_FullContext.py \
+nohup env CUDA_VISIBLE_DEVICES=4 python Eval_AR_24h_FullContext_clamped.py \
   --csv_path /your/data.csv \
   --checkpoint_path /your/model.pt \
   --output_dir /your/output \
-  --ar_step_size 36 \
+  --ar_step_size 3 \
   --min_history_hours 72 > ar_eval.log 2>&1 &
   
-nohup python Eval_AR_24h_FullContext.py \
+nohup python Eval_AR_24h_FullContext_clamped.py \
   --csv_path /workspace/JTTCGMformer/CGMfoundation_gai/data/shanghai_data.csv \
   --checkpoint_path /workspace/JTTCGMformer/CGMfoundation_gai/output/ckp/your_model.pt \
   --output_dir /workspace/JTTCGMformer/CGMfoundation_gai/output/ar_24h_eval/shanghai \

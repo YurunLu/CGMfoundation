@@ -3,11 +3,11 @@ import torch.nn as nn
 import torch.nn.functional as F
 import math
 
-# 🔥🔥🔥 修改点 1：新增标准的正弦/余弦绝对位置编码类
+# Fixed sinusoidal positional encoding.
 class PositionalEncoding(nn.Module):
     """
-    标准的正弦/余弦绝对位置编码。
-    由于参数是固定的数学公式计算得出，彻底免疫 Stride 变化导致的“未学习参数”灾难。
+    Fixed sine/cosine absolute positional encoding.
+    Positions use fixed formulas, so their encodings remain defined when stride changes.
     """
     def __init__(self, embed_dim, max_seq_len=5000):
         super().__init__()
@@ -16,18 +16,18 @@ class PositionalEncoding(nn.Module):
         div_term = torch.exp(torch.arange(0, embed_dim, 2).float() * (-math.log(10000.0) / embed_dim))
         pe[:, 0::2] = torch.sin(position * div_term)
         pe[:, 1::2] = torch.cos(position * div_term)
-        # 注册为 buffer，这样它会自动跟着模型 to(device)，但不会作为参数被优化器更新
+        # Register a buffer that follows the model device without optimizer updates.
         self.register_buffer('pe', pe.unsqueeze(0))
 
     def forward(self, x, start_idx=0, stride=1):
         device = x.device
         N = x.size(1)
-        # 计算每个 Patch 对应的真实物理时间步索引
+        # Map each patch to its absolute sample index.
         abs_idx = torch.arange(N, device=device) * stride + start_idx
-        # 防止极端情况越界
+        # Clamp positions to the available encoding range.
         abs_idx = torch.clamp(abs_idx, max=self.pe.size(1) - 1)
         
-        # 精准抽取对应物理位置的正弦波编码
+        # Select encodings at the corresponding sample positions.
         pos_vec = self.pe[0, abs_idx, :] 
         return x + pos_vec.unsqueeze(0)
 
@@ -102,7 +102,7 @@ class CGMBaseModel(nn.Module):
         self.use_temporal = use_temporal     
         self.use_positional = use_positional
 
-        # 保持单通道输入，不做双通道修改
+        # Encode single-channel glucose patches.
         self.cnn = nn.Sequential(
             nn.Conv1d(1, embed_dim // 2, 6, stride=1, padding=2),
             nn.GELU(),
@@ -112,7 +112,7 @@ class CGMBaseModel(nn.Module):
         self.patch_agg = PatchAggregator(embed_dim)
         self.local_encoder = nn.Sequential(nn.Linear(self.patch_size, self.embed_dim), nn.GELU())
 
-        # 🔥🔥🔥 修改点 2：将原本的 nn.Parameter 替换为数学固定的正弦位置编码
+        # Use fixed sinusoidal positional embeddings.
         # self.pos_embed = nn.Parameter(torch.zeros(1, max_seq_len, embed_dim))
         # nn.init.trunc_normal_(self.pos_embed, std=0.02)
         self.pos_embed = PositionalEncoding(embed_dim, max_seq_len=max_seq_len)
@@ -142,7 +142,7 @@ class CGMBaseModel(nn.Module):
         else:
             x = self.local_encoder(patches)
 
-        # 绝对位置编码（可消融）
+        # Optional absolute positional encoding for ablation.
         if self.use_positional:
             x = self.pos_embed(x, start_idx=start_idx, stride=stride)
 

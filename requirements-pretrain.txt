@@ -1,0 +1,11 @@
+# Direct dependencies recorded in the original Python 3.10 pretraining runs.
+# Install the appropriate PyTorch CUDA build first; see docs/PRETRAINING.md.
+torch==2.6.0
+numpy==2.2.5
+pandas==2.3.3
+scipy==1.15.3
+PyYAML==6.0.3
+datasets==4.6.1
+accelerate==1.13.0
+tqdm==4.67.3
+wandb==0.25.0

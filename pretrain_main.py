@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 import yaml
 import argparse
 import math 
@@ -17,6 +18,9 @@ from accelerate.utils import set_seed, DistributedDataParallelKwargs
 from models.base_model import CGMBaseModel
 from utils.loss_utils import forecast_loss, compute_forecast_metrics, event_based_metrics
 from utils.train_utils import WarmupCosineScheduler
+
+DEFAULT_CONFIG_PATH = Path(__file__).resolve().parent / "configs" / "config.yaml"
+
 
 class OnTheFlyDataset(Dataset):
     def __init__(self, hf_dataset, patch_size, stride, forecast_steps):
@@ -291,6 +295,17 @@ def run_pretrain_forecast(config):
     # Synchronize the best model weights before distributed test evaluation.
     accelerator.wait_for_everyone()
     sync_path = os.path.join(save_dir, "best_model_sync_temp.pt")
+
+    # Every rank sees the same unsharded split length before distributed testing.
+    if len(test_ds) == 0:
+        if accelerator.is_main_process:
+            print("\nTest split is empty; skipping test evaluation.")
+            if best_path is not None:
+                print(f"Best model saved to: {best_path}")
+            if os.path.exists(sync_path):
+                os.remove(sync_path)
+            wandb.finish()
+        return
     
     if best_state is not None and accelerator.is_main_process:
         torch.save(best_state, sync_path)
@@ -326,7 +341,7 @@ def run_pretrain_forecast(config):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="CGM Pretraining FrameWork")
-    parser.add_argument("--config", type=str, default="config.yaml", help="Path to config.yaml")
+    parser.add_argument("--config", type=str, default=str(DEFAULT_CONFIG_PATH), help="Path to the training configuration YAML")
     args = parser.parse_args()
     cfg = load_config(args.config)
     run_pretrain_forecast(cfg)

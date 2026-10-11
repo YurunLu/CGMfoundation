@@ -1,5 +1,5 @@
 '''
-python EvaluatePretrain.py \
+python EvaluatePretrain_with_patient_id_patient_metrics.py \
   --checkpoint_path /workspace/JTTCGMformer/CGMfoundation_gai/output/ckp/your_all_ckp.pt \
   --csv_path /workspace/JTTCGMformer/CGMformer_loss/data/shanghai_data.csv \
   --output_dir /workspace/JTTCGMformer/CGMfoundation_gai/output/fanhuaxing/weitai1wall \

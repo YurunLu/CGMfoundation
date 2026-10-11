@@ -1,13 +1,18 @@
+import argparse
 import os
+from pathlib import Path
 import glob
 import yaml
 import numpy as np
 import pandas as pd
-from datasets import Dataset, DatasetDict
+from datasets import Dataset, DatasetDict, Features, Sequence, Value
 from multiprocessing import cpu_count
 from utils.data_cleaning import align_cgm_dataframe_columns, clean_cgm_array, clean_cgm_dataframe
 
-def load_config(config_path="config.yaml"):
+DEFAULT_CONFIG_PATH = Path(__file__).resolve().parent / "configs" / "config.yaml"
+
+
+def load_config(config_path=DEFAULT_CONFIG_PATH):
     with open(config_path, "r", encoding="utf-8") as f:
         return yaml.safe_load(f)
 
@@ -30,8 +35,8 @@ def process_patient(example):
         "orig_mask": orig_mask
     }
 
-def main():
-    config = load_config("config.yaml")
+def main(config_path=DEFAULT_CONFIG_PATH):
+    config = load_config(config_path)
     csv_dir = config['data']['csv_dir']
     hf_dir = config['data']['hf_dataset_dir']
     
@@ -73,17 +78,34 @@ def main():
     num_proc = max(1, cpu_count() - 2)
     print(f"3. Running parallel CPU imputation ({num_proc} processes)")
     
-    processed_datasets = raw_datasets.map(
-        process_patient,
-        num_proc=num_proc,
-        remove_columns=["seq_raw"], 
-        desc="Cleaning sequences and generating masks..."
-    )
+    processed_datasets = DatasetDict()
+    empty_features = Features({
+        "seq_filled": Sequence(Value("float32")),
+        "orig_mask": Sequence(Value("float32")),
+    })
+    for split, dataset in raw_datasets.items():
+        if len(dataset) == 0:
+            processed_datasets[split] = Dataset.from_dict(
+                {"seq_filled": [], "orig_mask": []}, features=empty_features
+            )
+        else:
+            processed_datasets[split] = dataset.map(
+                process_patient,
+                num_proc=num_proc,
+                remove_columns=["seq_raw"],
+                desc="Cleaning sequences and generating masks..."
+            )
 
     print(f"4. Saving preprocessed sequences to disk ({hf_dir})...")
-    os.makedirs(os.path.dirname(hf_dir), exist_ok=True)
+    Path(hf_dir).parent.mkdir(parents=True, exist_ok=True)
     processed_datasets.save_to_disk(hf_dir)
     print("Sequence preprocessing complete.")
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description="Build the preprocessed CGM dataset")
+    parser.add_argument(
+        "--config", type=str, default=str(DEFAULT_CONFIG_PATH),
+        help="Path to the dataset configuration YAML"
+    )
+    args = parser.parse_args()
+    main(args.config)
