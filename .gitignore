@@ -17,6 +17,8 @@ demo_workspace/
 *.pth
 *.ckpt
 *.safetensors
+*.npy
+*.npz
 *.arrow
 *.csv
 *.xlsx

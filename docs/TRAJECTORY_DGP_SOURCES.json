@@ -1,0 +1,101 @@
+{
+  "upstream_base": "cee21194ff08410166b7a90f7dfcd4c295f907cc",
+  "kernels": [
+    {
+      "source": "optimize_glycemic_basin_compact_dgp.py",
+      "function": "patch_risk",
+      "source_lines": [
+        139,
+        152
+      ],
+      "sha256": "267fed1df4a4854aece54ee2043dec58127b93521625f0ed444766653c1975b6"
+    },
+    {
+      "source": "Results/DGP/DGP_LyapunovIntegrated/code/compute_ple_sli_v3.py",
+      "function": "patch_minute",
+      "source_lines": [
+        114,
+        115
+      ],
+      "sha256": "6ca4a017ca0e099eff31e3bda7b26b07c1e986addf0b18c2fad1b3870eb9fee8"
+    },
+    {
+      "source": "Results/DGP/DGP_LyapunovIntegrated/code/compute_ple_sli_v3.py",
+      "function": "collapse_starts",
+      "source_lines": [
+        187,
+        193
+      ],
+      "sha256": "6da8aa18dad4794d22032d892e309e96d0e90c8ca1dfb740698b773aa3331800"
+    },
+    {
+      "source": "Results/DGP/DGP_LyapunovIntegrated/code/compute_ple_sli_v3.py",
+      "function": "individual_attractor_pulse_events",
+      "source_lines": [
+        228,
+        280
+      ],
+      "sha256": "97b0cef1cb97b97ae8a7914f4b4c8901b77d3cd625726c47bf418d4d451ba37e"
+    },
+    {
+      "source": "Results/DGP/DGP_LyapunovIntegrated/code/compute_ple_sli_v3.py",
+      "function": "linear_slope",
+      "source_lines": [
+        322,
+        328
+      ],
+      "sha256": "9079e813ff569098585612ab42a0b5fcc40e2a3c6eb4cc11e1a11aea0dbe8e7b"
+    },
+    {
+      "source": "Results/DGP/DGP_LyapunovIntegrated/code/compute_ple_sli_v3.py",
+      "function": "finite_time_propagator_terms",
+      "source_lines": [
+        399,
+        459
+      ],
+      "sha256": "fb9f4128e1074225758fa931bd2933af01526e552fde15741de22ef840541ff7"
+    },
+    {
+      "source": "Results/DGP/DGP_LyapunovIntegrated/code/optimize_sli_mahalanobis.py",
+      "function": "robust_location_scale",
+      "source_lines": [
+        33,
+        47
+      ],
+      "sha256": "328c386040deb0cf31d4e349b8649689c57d17e3485b3660ce2026f6d3b6cd08"
+    },
+    {
+      "source": "Results/DGP/DGP_LyapunovIntegrated/code/optimize_sli_mahalanobis.py",
+      "function": "z_from_stats",
+      "source_lines": [
+        50,
+        51
+      ],
+      "sha256": "8e65d52525958d76f37ea975236d216ed3010423bf428e50561ed4dbef7abea6"
+    },
+    {
+      "source": "Results/DGP/DGP_LyapunovIntegrated/code/optimize_sli_mahalanobis.py",
+      "function": "mahalanobis_radius_terms",
+      "source_lines": [
+        80,
+        139
+      ],
+      "sha256": "02613df274bdd3296a3c51d6f3ffbddc01ecf5cc6ae166425c3d78bed3cbaeb8"
+    }
+  ],
+  "assembly_sources": [
+    "build_dgp_results_section.py",
+    "Results/DGP/FinalDGP/code/search_latent_variability_panel.py",
+    "Results/DGP/FinalDGP/code/compute_patch_level_lvar_features.py",
+    "optimize_glycemic_basin_compact_dgp.py",
+    "Results/DGP/DGP_LyapunovIntegrated/code/build_current_dgp_release.py",
+    "Results/DGP/DGP_LyapunovIntegrated/code/export_latest_dgp_drs_all_datasets.py"
+  ],
+  "trajectory_source": "GetMeanPatchEmb.py and utils/data_utils.py in upstream repository",
+  "adaptations": [
+    "Add CLI paths and output validation",
+    "Isolate current formulas from cohort evaluation and plotting",
+    "Require external frozen reference and calibration files",
+    "Export full trajectories instead of mean pooling"
+  ]
+}
