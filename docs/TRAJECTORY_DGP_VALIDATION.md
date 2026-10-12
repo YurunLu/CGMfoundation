@@ -14,6 +14,9 @@ validation directory; the repository's existing environment files are preserved.
 - All three new entry-point `--help` commands passed.
 - Synthetic export matched direct inference from the same random encoder.
 - Exported masks matched `CGMForecastDataset`; string IDs and raw NaNs were retained.
+- Checkpoint metadata mismatches for stride, positional and temporal embedding
+  flags were rejected before writing outputs, including cases with unchanged
+  parameter shapes.
 - Empty recordings were excluded and existing nonempty outputs were rejected.
 - Synthetic reference fitting, NGT calibration and frozen application passed.
 - Both dataset and training DRS normalization ran successfully.

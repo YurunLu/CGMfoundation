@@ -22,6 +22,10 @@ The config needs the training `model` section, including `patch_size`, `stride`,
 `forecast_steps`, `embed_dim`, `max_seq_len`, depth, heads, and embedding flags.
 YAML and JSON are supported. Model loading is strict; a mismatched architecture
 or checkpoint fails instead of producing partially initialized trajectories.
+When `model_hparams` is present in the checkpoint, configuration values are also
+checked against it, including stride and embedding flags that do not change
+weight shapes. For older checkpoints without this metadata, supply the exact
+training config; weight loading alone cannot verify these settings.
 Checkpoint wrappers `model_state_dict`, `state_dict`, and `model` are supported.
 Checkpoint files must be from a trusted training source and loadable with
 PyTorch's `weights_only=True` loader.

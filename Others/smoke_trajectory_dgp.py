@@ -34,7 +34,7 @@ def check(directory):
     stride = model_args.pop('stride')
     model_args['forecast_size'] = model_args.pop('forecast_steps')
     model = CGMBaseModel(**model_args).eval()
-    torch.save({'model_state_dict': model.state_dict()}, directory / 'checkpoint.pt')
+    torch.save({'model_state_dict': model.state_dict(), 'model_hparams': config['model']}, directory / 'checkpoint.pt')
     (directory / 'config.json').write_text(json.dumps(config))
     data = rng.normal(6, 1, (6, length - 1)).astype(np.float32)
     data[0, 250:260] = np.nan
@@ -61,6 +61,17 @@ def check(directory):
     assert np.isnan(raw[0]).any() and not mask[1, -1]
     duplicate = subprocess.run([sys.executable, *map(str, command)], cwd=ROOT, capture_output=True)
     assert duplicate.returncode != 0 and b'FileExistsError' in duplicate.stderr
+    # These settings preserve tensor shapes, so state_dict strictness cannot
+    # catch their mismatch. Check the training checkpoint metadata explicitly.
+    for name, value in [('use_positional', False), ('use_temporal', True), ('stride', 6)]:
+        incompatible = {'model': {**config['model'], name: value}}
+        (directory / 'incompatible.json').write_text(json.dumps(incompatible))
+        mismatch_command = [ROOT / 'ExportTrajectory.py', '--csv-path', directory / 'cgm.csv',
+                            '--checkpoint-path', directory / 'checkpoint.pt', '--config', directory / 'incompatible.json',
+                            '--output-dir', directory / ('rejected_' + name)]
+        mismatch = subprocess.run([sys.executable, *map(str, mismatch_command)], cwd=ROOT, capture_output=True)
+        assert mismatch.returncode != 0 and b'model_hparams mismatch' in mismatch.stderr
+        assert not (directory / ('rejected_' + name)).exists()
 
     # Use known pulsatile trajectories to exercise PLE, gaps and calibration.
     patch_count = z.shape[1]
@@ -111,7 +122,7 @@ def check(directory):
     np.save(export / 'patch_valid_mask.npy', gapped)
     short_raw, _ = raw_metrics(export, reference)
     assert short_raw.PLE_raw.isna().all() and short_raw.HAD.isna().all()
-    print('PASS: encoder parity, masks, IDs, raw NaNs, overwrite refusal, DGP calibration/application, DRS modes, gaps')
+    print('PASS: encoder parity, checkpoint metadata, masks, IDs, raw NaNs, overwrite refusal, DGP calibration/application, DRS modes, gaps')
 
 
 if __name__ == '__main__':

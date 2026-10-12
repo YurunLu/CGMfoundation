@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import inspect
 import json
 from pathlib import Path
 
@@ -55,6 +56,15 @@ def export(args):
     # silently exporting trajectories with missing/random encoder parameters.
     checkpoint = torch.load(args.checkpoint_path, map_location='cpu', weights_only=True)
     if isinstance(checkpoint, dict):
+        # Flags and stride do not change parameter tensor shapes. Strict state
+        # loading alone cannot detect a configuration that changes inference.
+        effective = {name: parameter.default for name, parameter in inspect.signature(CGMBaseModel).parameters.items()
+                     if parameter.default is not inspect.Parameter.empty}
+        effective.update(model_config)
+        effective.update(stride=stride, forecast_steps=forecast)
+        for name, expected in checkpoint.get('model_hparams', {}).items():
+            if expected is not None and name in effective and effective[name] != expected:
+                raise ValueError(f'Checkpoint model_hparams mismatch for {name}: config={effective[name]!r}, checkpoint={expected!r}')
         for key in ('model_state_dict', 'state_dict', 'model'):
             if key in checkpoint:
                 checkpoint = checkpoint[key]
