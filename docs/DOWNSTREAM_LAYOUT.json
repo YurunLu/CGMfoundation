@@ -1,715 +1,262 @@
 [
   {
-    "original_path": "code/CGMfoundation_lab.py",
     "path": "LabelPredictionFinetune_CV_main.py",
-    "original_sha256": "bfff4f76a7d1e471313b053e319802da886fcff1b5b1d226874e1bd2c59ce519",
-    "sha256": "4c0e4274abde9fa95ab20c99d32fb5b3174b3dd6c2b204a81e8c6575bd6dd977",
-    "layout_replacements": [
-      {
-        "before": "REPO_ROOT = Path(__file__).resolve().parent.parent",
-        "after": "REPO_ROOT = Path(__file__).resolve().parent",
-        "count": 1
-      },
-      {
-        "before": "CODE_ROOT = REPO_ROOT / \"code\"",
-        "after": "CODE_ROOT = REPO_ROOT",
-        "count": 1
-      },
-      {
-        "before": "import lab_cv_runner as runner",
-        "after": "from LabelPredictionFinetune import lab_cv_runner as runner",
-        "count": 1
-      }
-    ]
+    "sha256": "4c0e4274abde9fa95ab20c99d32fb5b3174b3dd6c2b204a81e8c6575bd6dd977"
   },
   {
-    "original_path": "code/CGMfoundation_lab_ridge.py",
     "path": "CGMfoundation_ridge_main.py",
-    "original_sha256": "b689a661d5ccad1e8232d532e9db829e035a3215c0825d8699a7d1f923e0473e",
-    "sha256": "72c58ad6d2f8eb2ed7fdfb4daf55ccd6189737d91d4eb6a9ad9119127fff03e1",
-    "layout_replacements": [
-      {
-        "before": "REPO_ROOT = Path(__file__).resolve().parent.parent",
-        "after": "REPO_ROOT = Path(__file__).resolve().parent",
-        "count": 1
-      },
-      {
-        "before": "CODE_ROOT = REPO_ROOT / \"code\"",
-        "after": "CODE_ROOT = REPO_ROOT",
-        "count": 1
-      },
-      {
-        "before": "import lab_cv_runner as runner",
-        "after": "from LabelPredictionFinetune import lab_cv_runner as runner",
-        "count": 1
-      },
-      {
-        "before": "from models.base_model import CGMBaseModel",
-        "after": "from models.downstream_base_model import CGMBaseModel",
-        "count": 1
-      }
-    ]
+    "sha256": "72c58ad6d2f8eb2ed7fdfb4daf55ccd6189737d91d4eb6a9ad9119127fff03e1"
   },
   {
-    "original_path": "code/CGMfoundation_lab_scheduler.py",
     "path": "LabelPredictionFinetune_scheduler.py",
-    "original_sha256": "9f3765bfb1f7278ab1051df211cd6a3144cdcd7809d66e93f54a74dbdca5fb96",
-    "sha256": "fdb13f752d69f248b3db1b53fecfcc0991b5547d1a54005468374b305b8d2dcf",
-    "layout_replacements": [
-      {
-        "before": "REPO_ROOT = Path(__file__).resolve().parent.parent",
-        "after": "REPO_ROOT = Path(__file__).resolve().parent",
-        "count": 1
-      },
-      {
-        "before": "CODE_ROOT = REPO_ROOT / \"code\"",
-        "after": "CODE_ROOT = REPO_ROOT",
-        "count": 1
-      },
-      {
-        "before": "import lab_cv_runner as runner",
-        "after": "from LabelPredictionFinetune import lab_cv_runner as runner",
-        "count": 1
-      },
-      {
-        "before": "code/CGMfoundation_lab.py",
-        "after": "LabelPredictionFinetune_CV_main.py",
-        "count": 1
-      }
-    ]
+    "sha256": "fdb13f752d69f248b3db1b53fecfcc0991b5547d1a54005468374b305b8d2dcf"
   },
   {
-    "original_path": "code/Eval_Event_AR_24h_FullContext.py",
     "path": "EventFinetune_AR_main.py",
-    "original_sha256": "d0fd56c1518988e929dc5b208ce935f8cfe79742eb9acc74ac2fed8ad753b32b",
-    "sha256": "5135372947ecd50e7bc5dfc3536b32a2c93a9122bdae2db87df838efeda80515",
-    "layout_replacements": [
-      {
-        "before": "REPO_ROOT = Path(__file__).resolve().parent.parent",
-        "after": "REPO_ROOT = Path(__file__).resolve().parent",
-        "count": 1
-      },
-      {
-        "before": "CODE_ROOT = REPO_ROOT / \"code\"",
-        "after": "CODE_ROOT = REPO_ROOT",
-        "count": 1
-      },
-      {
-        "before": "import export_event_prepost_prediction_excel as helpers",
-        "after": "from EventFinetune import export_event_prepost_prediction_excel as helpers",
-        "count": 1
-      },
-      {
-        "before": "import export_event_rollout24_compact as compact",
-        "after": "from EventFinetune import export_event_rollout24_compact as compact",
-        "count": 1
-      }
-    ]
+    "sha256": "5135372947ecd50e7bc5dfc3536b32a2c93a9122bdae2db87df838efeda80515"
   },
   {
-    "original_path": "code/event_finetune_scheduler.py",
     "path": "EventFinetune_scheduler.py",
-    "original_sha256": "21acaa68cdafc32e86086d90442cbda1184b03fc088cf2c087bb2b1a91d25e1d",
-    "sha256": "464939031f0a7f06ac61d81f5d1b6290d73ea645a174905f78eec8f395d79809",
-    "layout_replacements": [
-      {
-        "before": "repo_root = script_path.parent.parent",
-        "after": "repo_root = script_path.parent",
-        "count": 1
-      }
-    ]
+    "sha256": "464939031f0a7f06ac61d81f5d1b6290d73ea645a174905f78eec8f395d79809"
   },
   {
-    "original_path": "code/EventFinetune_main.py",
     "path": "EventFinetune_main.py",
-    "original_sha256": "7f3a78626a32b30680b162ab6add06a3674d85e37c9a85052fa82f8e07763f35",
-    "sha256": "3794dcabdc20f09c9335871b74f106716c9dfae17134f094aa00fb50d6bf15ef",
-    "layout_replacements": [
-      {
-        "before": "REPO_ROOT = Path(__file__).resolve().parent.parent",
-        "after": "REPO_ROOT = Path(__file__).resolve().parent",
-        "count": 1
-      }
-    ]
+    "sha256": "3794dcabdc20f09c9335871b74f106716c9dfae17134f094aa00fb50d6bf15ef"
   },
   {
-    "original_path": "code/export_event_compare_compact.py",
     "path": "EventFinetune/export_event_compare_compact.py",
-    "original_sha256": "e0e35789b7692a80d7f59d89e21e184f0dae39a1fbe82dbbc249187922fc6dfb",
-    "sha256": "9268071b345b322ab5fba1a611711221a155b9dcf6ba727d91802e51b84c79b0",
-    "layout_replacements": [
-      {
-        "before": "CODE_ROOT = REPO_ROOT / \"code\"",
-        "after": "CODE_ROOT = REPO_ROOT",
-        "count": 1
-      },
-      {
-        "before": "import export_event_prepost_prediction_excel as helpers",
-        "after": "from EventFinetune import export_event_prepost_prediction_excel as helpers",
-        "count": 1
-      }
-    ]
+    "sha256": "9268071b345b322ab5fba1a611711221a155b9dcf6ba727d91802e51b84c79b0"
   },
   {
-    "original_path": "code/export_event_prepost_prediction_excel.py",
     "path": "EventFinetune/export_event_prepost_prediction_excel.py",
-    "original_sha256": "7d89735f1043f7b46139c5e20f71632c3b11e4d9735a185a1965ce71881fb026",
-    "sha256": "db84c51118586d364f49e2c4203bb54886a66c2de4713def8dd3b435eb33f297",
-    "layout_replacements": [
-      {
-        "before": "CODE_ROOT = REPO_ROOT / \"code\"",
-        "after": "CODE_ROOT = REPO_ROOT",
-        "count": 1
-      }
-    ]
+    "sha256": "db84c51118586d364f49e2c4203bb54886a66c2de4713def8dd3b435eb33f297"
   },
   {
-    "original_path": "code/export_event_rollout24_compact.py",
     "path": "EventFinetune/export_event_rollout24_compact.py",
-    "original_sha256": "50bd6ffae32b88329f7a3e7a3899e850dfaab0fc9d73352c10bbac1d1d2fc028",
-    "sha256": "0a96520b5b61f451cc579ed12d19b74b4be6ccbe314abf81020ed3d8767bf6cb",
-    "layout_replacements": [
-      {
-        "before": "CODE_ROOT = REPO_ROOT / \"code\"",
-        "after": "CODE_ROOT = REPO_ROOT",
-        "count": 1
-      },
-      {
-        "before": "import export_event_prepost_prediction_excel as helpers",
-        "after": "from EventFinetune import export_event_prepost_prediction_excel as helpers",
-        "count": 1
-      }
-    ]
+    "sha256": "0a96520b5b61f451cc579ed12d19b74b4be6ccbe314abf81020ed3d8767bf6cb"
   },
   {
-    "original_path": "code/export_lab_metrics_excel.py",
     "path": "LabelPredictionFinetune/export_lab_metrics_excel.py",
-    "original_sha256": "e404ca6e9b10e72e33ce3c3ff709cb090c7e99ff89a07bea790667e40c08ec61",
-    "sha256": "e404ca6e9b10e72e33ce3c3ff709cb090c7e99ff89a07bea790667e40c08ec61",
-    "layout_replacements": []
+    "sha256": "e404ca6e9b10e72e33ce3c3ff709cb090c7e99ff89a07bea790667e40c08ec61"
   },
   {
-    "original_path": "code/export_lab_model_compare_excel.py",
     "path": "LabelPredictionFinetune/export_lab_model_compare_excel.py",
-    "original_sha256": "c215a5a6d14d4ff3be12871c315a99806837f5f30b7660d7b045e35be5dca2a4",
-    "sha256": "c215a5a6d14d4ff3be12871c315a99806837f5f30b7660d7b045e35be5dca2a4",
-    "layout_replacements": []
+    "sha256": "c215a5a6d14d4ff3be12871c315a99806837f5f30b7660d7b045e35be5dca2a4"
   },
   {
-    "original_path": "code/GluFormer_lab_ridge.py",
     "path": "GluFormer_ridge_main.py",
-    "original_sha256": "73b1ca9938362a481884ce2f9014f654f1d91072396b61e14bed44bf4be7b6b3",
-    "sha256": "8ea6b118ed41bc58682c44497794bda33ab5931532fe1d06fb2abdacdcc86a3d",
-    "layout_replacements": [
-      {
-        "before": "REPO_ROOT = Path(__file__).resolve().parent.parent",
-        "after": "REPO_ROOT = Path(__file__).resolve().parent",
-        "count": 1
-      },
-      {
-        "before": "CODE_ROOT = REPO_ROOT / \"code\"",
-        "after": "CODE_ROOT = REPO_ROOT",
-        "count": 1
-      },
-      {
-        "before": "import lab_cv_runner as runner",
-        "after": "from LabelPredictionFinetune import lab_cv_runner as runner",
-        "count": 1
-      }
-    ]
+    "sha256": "8ea6b118ed41bc58682c44497794bda33ab5931532fe1d06fb2abdacdcc86a3d"
   },
   {
-    "original_path": "code/GMI_IGLU_lab_ridge.py",
     "path": "GMI_IGLU_main.py",
-    "original_sha256": "e18c86ee2476cad6720af9cbf6019780bd55d7267d98a62ed431a7132201dcda",
-    "sha256": "df83add1a2253b4bf079cdfffbcfc24fa266f88b63cf16b1252fdc28ce38cf56",
-    "layout_replacements": [
-      {
-        "before": "REPO_ROOT = Path(__file__).resolve().parent.parent",
-        "after": "REPO_ROOT = Path(__file__).resolve().parent",
-        "count": 1
-      },
-      {
-        "before": "CODE_ROOT = REPO_ROOT / \"code\"",
-        "after": "CODE_ROOT = REPO_ROOT",
-        "count": 1
-      },
-      {
-        "before": "import lab_cv_runner as runner",
-        "after": "from LabelPredictionFinetune import lab_cv_runner as runner",
-        "count": 1
-      }
-    ]
+    "sha256": "df83add1a2253b4bf079cdfffbcfc24fa266f88b63cf16b1252fdc28ce38cf56"
   },
   {
-    "original_path": "code/lab_cv_runner.py",
     "path": "LabelPredictionFinetune/lab_cv_runner.py",
-    "original_sha256": "68eef95d95de5f64ea2dfc5c573f632d8efd6a6d2488ee0a1d666d3908dbf75f",
-    "sha256": "2e3bc3990acd343205afead8ce644ac5fe2d9a3ea880ad1e0d9079a9ba5e77b7",
-    "layout_replacements": [
-      {
-        "before": "from models.base_model import CGMBaseModel",
-        "after": "from models.downstream_base_model import CGMBaseModel",
-        "count": 1
-      },
-      {
-        "before": "from utils.data_utils import CGMForecastDataset",
-        "after": "from utils.downstream_data_utils import CGMForecastDataset",
-        "count": 1
-      },
-      {
-        "before": "from utils.train_utils import WarmupCosineScheduler",
-        "after": "from utils.downstream_train_utils import WarmupCosineScheduler",
-        "count": 1
-      }
-    ]
+    "sha256": "2e3bc3990acd343205afead8ce644ac5fe2d9a3ea880ad1e0d9079a9ba5e77b7"
   },
   {
-    "original_path": "code/LabelFeature_lab_ridge.py",
     "path": "LabelFeature_ridge_main.py",
-    "original_sha256": "a877c3c87134ae594cee09a877a2d804ca8ffaf113ae55c4a31b333fffafbc0d",
-    "sha256": "47f49d63157df8bfb7c7644d4a245fffbfcf1ca967d25595421badc82a738e29",
-    "layout_replacements": [
-      {
-        "before": "REPO_ROOT = Path(__file__).resolve().parent.parent",
-        "after": "REPO_ROOT = Path(__file__).resolve().parent",
-        "count": 1
-      },
-      {
-        "before": "CODE_ROOT = REPO_ROOT / \"code\"",
-        "after": "CODE_ROOT = REPO_ROOT",
-        "count": 1
-      },
-      {
-        "before": "import lab_cv_runner as runner",
-        "after": "from LabelPredictionFinetune import lab_cv_runner as runner",
-        "count": 1
-      }
-    ]
+    "sha256": "47f49d63157df8bfb7c7644d4a245fffbfcf1ca967d25595421badc82a738e29"
   },
   {
-    "original_path": "code/train_patchtst_baseline.py",
     "path": "GlucosePredictionBaseline/PatchTST_main.py",
-    "original_sha256": "01a4292638b41aa68fd72cdae8e3b0f72c64c01850bbf402582666987f7ea737",
-    "sha256": "01a4292638b41aa68fd72cdae8e3b0f72c64c01850bbf402582666987f7ea737",
-    "layout_replacements": []
+    "sha256": "01a4292638b41aa68fd72cdae8e3b0f72c64c01850bbf402582666987f7ea737"
   },
   {
-    "original_path": "configs/cgmfoundation_lab_ridge/colas_incident_t2d.json",
     "path": "configs/cgmfoundation_lab_ridge/colas_incident_t2d.json",
-    "original_sha256": "20b63ccda97222b3a15c2c9692036f1ce262aa491fe91ecd7051db5cb3e7bb75",
-    "sha256": "20b63ccda97222b3a15c2c9692036f1ce262aa491fe91ecd7051db5cb3e7bb75",
-    "layout_replacements": []
+    "sha256": "20b63ccda97222b3a15c2c9692036f1ce262aa491fe91ecd7051db5cb3e7bb75"
   },
   {
-    "original_path": "configs/cgmfoundation_lab_ridge/colas_incident_t2d_hba1c_available.json",
     "path": "configs/cgmfoundation_lab_ridge/colas_incident_t2d_hba1c_available.json",
-    "original_sha256": "d40f6780e0899492c00a86116277b3631d4ad92b4eb1108e3a0eb4caa0f59819",
-    "sha256": "d40f6780e0899492c00a86116277b3631d4ad92b4eb1108e3a0eb4caa0f59819",
-    "layout_replacements": []
+    "sha256": "d40f6780e0899492c00a86116277b3631d4ad92b4eb1108e3a0eb4caa0f59819"
   },
   {
-    "original_path": "configs/cgmfoundation_lab_ridge/hpp_cgmanchored_incident_180d.json",
     "path": "configs/cgmfoundation_lab_ridge/hpp_cgmanchored_incident_180d.json",
-    "original_sha256": "2b43aa19911fa9e1b4f8f7861c3aa95934502ed6d3fd2b8db12a5143b3eb4d19",
-    "sha256": "2b43aa19911fa9e1b4f8f7861c3aa95934502ed6d3fd2b8db12a5143b3eb4d19",
-    "layout_replacements": []
+    "sha256": "2b43aa19911fa9e1b4f8f7861c3aa95934502ed6d3fd2b8db12a5143b3eb4d19"
   },
   {
-    "original_path": "configs/cgmfoundation_lab_ridge/hpp_cgmanchored_incident_180d_hba1c_available.json",
     "path": "configs/cgmfoundation_lab_ridge/hpp_cgmanchored_incident_180d_hba1c_available.json",
-    "original_sha256": "7e0235c358887cf3c64f4a43fe8ea0dd487af5ee4fc4dba042c19c4ad3208d05",
-    "sha256": "af60f0ea77608d0e8f8e9bd1d3cad732a5aefbf5018fc5e2fa1ed4cc397eee8d",
-    "layout_replacements": [
-      {
-        "before": "code/event_finetune_scheduler.py",
-        "after": "EventFinetune_scheduler.py",
-        "count": 1
-      }
-    ]
+    "sha256": "939ad0ba3e9a96e61c52caf5654176084f054668b809d2a47d1dae78318bdfd8"
   },
   {
-    "original_path": "configs/event_finetune_tasks/CGMacros.json",
     "path": "configs/event_finetune_tasks/CGMacros.json",
-    "original_sha256": "028d54543d91420f0edada32093b534c1335a0af67929f1540c295dcbd8fb287",
-    "sha256": "028d54543d91420f0edada32093b534c1335a0af67929f1540c295dcbd8fb287",
-    "layout_replacements": []
+    "sha256": "028d54543d91420f0edada32093b534c1335a0af67929f1540c295dcbd8fb287"
   },
   {
-    "original_path": "configs/event_finetune_tasks/HPP.json",
     "path": "configs/event_finetune_tasks/HPP.json",
-    "original_sha256": "b6d59d0de6c0b4a7be6fedaa04df2af4c9a2c9efe6c97fb4519730ce87296555",
-    "sha256": "b6d59d0de6c0b4a7be6fedaa04df2af4c9a2c9efe6c97fb4519730ce87296555",
-    "layout_replacements": []
+    "sha256": "b6d59d0de6c0b4a7be6fedaa04df2af4c9a2c9efe6c97fb4519730ce87296555"
   },
   {
-    "original_path": "configs/event_finetune_tasks/zhao_full.json",
     "path": "configs/event_finetune_tasks/zhao_full.json",
-    "original_sha256": "b1a4fda994a088cc42e60fd2e6c1d4a9adb32eb5b5b365d08fce6fa0ef62ea3c",
-    "sha256": "b1a4fda994a088cc42e60fd2e6c1d4a9adb32eb5b5b365d08fce6fa0ef62ea3c",
-    "layout_replacements": []
+    "sha256": "b1a4fda994a088cc42e60fd2e6c1d4a9adb32eb5b5b365d08fce6fa0ef62ea3c"
   },
   {
-    "original_path": "configs/event_finetune_tasks/zhao_simple.json",
     "path": "configs/event_finetune_tasks/zhao_simple.json",
-    "original_sha256": "8b52280612d5cb06be93a77291fa90526d5f12413377b04f86e44434f12b61d4",
-    "sha256": "8b52280612d5cb06be93a77291fa90526d5f12413377b04f86e44434f12b61d4",
-    "layout_replacements": []
+    "sha256": "8b52280612d5cb06be93a77291fa90526d5f12413377b04f86e44434f12b61d4"
   },
   {
-    "original_path": "configs/gluformer_lab_ridge/all_datasets_2gpu.json",
     "path": "configs/gluformer_lab_ridge/all_datasets_2gpu.json",
-    "original_sha256": "6f885e40ae68bae3e9fe06177ec8d39e31f84419fe3429cd2e6233ed769fc7cd",
-    "sha256": "8df654fec1f274a99e373da263c38ee56487d6553a263d4a438ee2cc1f4d0994",
-    "layout_replacements": [
-      {
-        "before": "code/GluFormer_lab_ridge.py",
-        "after": "GluFormer_ridge_main.py",
-        "count": 1
-      }
-    ]
+    "sha256": "8df654fec1f274a99e373da263c38ee56487d6553a263d4a438ee2cc1f4d0994"
   },
   {
-    "original_path": "configs/gluformer_lab_ridge/hpp_new_lab.json",
     "path": "configs/gluformer_lab_ridge/hpp_new_lab.json",
-    "original_sha256": "8f16f73129cc11fa1be2b55b18ae8ef6fd93a7524661d29a7d4dfb161df9040f",
-    "sha256": "8f16f73129cc11fa1be2b55b18ae8ef6fd93a7524661d29a7d4dfb161df9040f",
-    "layout_replacements": []
+    "sha256": "8f16f73129cc11fa1be2b55b18ae8ef6fd93a7524661d29a7d4dfb161df9040f"
   },
   {
-    "original_path": "configs/gluformer_lab_ridge/hpp_ridge.json",
     "path": "configs/gluformer_lab_ridge/hpp_ridge.json",
-    "original_sha256": "1a745ddbf1e906bd7f74cfdbb74708dc3cecabef6c3445e715978ff438fac52f",
-    "sha256": "1a745ddbf1e906bd7f74cfdbb74708dc3cecabef6c3445e715978ff438fac52f",
-    "layout_replacements": []
+    "sha256": "1a745ddbf1e906bd7f74cfdbb74708dc3cecabef6c3445e715978ff438fac52f"
   },
   {
-    "original_path": "configs/gluformer_lab_ridge/nicheng_ridge.json",
     "path": "configs/gluformer_lab_ridge/nicheng_ridge.json",
-    "original_sha256": "0a0c6af074c897e43b14c5cf0fcd9751d9ccb16ff58c486fa90546ba15eb9029",
-    "sha256": "0a0c6af074c897e43b14c5cf0fcd9751d9ccb16ff58c486fa90546ba15eb9029",
-    "layout_replacements": []
+    "sha256": "0a0c6af074c897e43b14c5cf0fcd9751d9ccb16ff58c486fa90546ba15eb9029"
   },
   {
-    "original_path": "configs/gluformer_lab_ridge/zhao_no_t1d_ridge.json",
     "path": "configs/gluformer_lab_ridge/zhao_no_t1d_ridge.json",
-    "original_sha256": "8e35620c014126d4f48b0772f5dd18df7fc1ac1c01be2a2f6158bca0b87711ff",
-    "sha256": "8e35620c014126d4f48b0772f5dd18df7fc1ac1c01be2a2f6158bca0b87711ff",
-    "layout_replacements": []
+    "sha256": "8e35620c014126d4f48b0772f5dd18df7fc1ac1c01be2a2f6158bca0b87711ff"
   },
   {
-    "original_path": "configs/gluformer_lab_ridge/zhao_ridge.json",
     "path": "configs/gluformer_lab_ridge/zhao_ridge.json",
-    "original_sha256": "e46c56e487ac2646f1396866295053f8da0999b19c76845b709946924eb72408",
-    "sha256": "e46c56e487ac2646f1396866295053f8da0999b19c76845b709946924eb72408",
-    "layout_replacements": []
+    "sha256": "e46c56e487ac2646f1396866295053f8da0999b19c76845b709946924eb72408"
   },
   {
-    "original_path": "configs/gmi_iglu_lab_ridge/hpp.json",
     "path": "configs/gmi_iglu_lab_ridge/hpp.json",
-    "original_sha256": "954ac60c9db135d65fd09fa4710be93cde213e2e65e9d880b8cc30f25cd6282e",
-    "sha256": "954ac60c9db135d65fd09fa4710be93cde213e2e65e9d880b8cc30f25cd6282e",
-    "layout_replacements": []
+    "sha256": "954ac60c9db135d65fd09fa4710be93cde213e2e65e9d880b8cc30f25cd6282e"
   },
   {
-    "original_path": "configs/gmi_iglu_lab_ridge/hpp_new_lab_gmi.json",
     "path": "configs/gmi_iglu_lab_ridge/hpp_new_lab_gmi.json",
-    "original_sha256": "b7c6ce377147cf73449234c95d18e25b8cf0b97730146a493de43854ffc043ff",
-    "sha256": "b7c6ce377147cf73449234c95d18e25b8cf0b97730146a493de43854ffc043ff",
-    "layout_replacements": []
+    "sha256": "b7c6ce377147cf73449234c95d18e25b8cf0b97730146a493de43854ffc043ff"
   },
   {
-    "original_path": "configs/gmi_iglu_lab_ridge/hpp_new_lab_iglu_all.json",
     "path": "configs/gmi_iglu_lab_ridge/hpp_new_lab_iglu_all.json",
-    "original_sha256": "ba13540f5feba0cdab4b41d60a56d261aebbdc8fc25c570706a4fbf51ab3f3d2",
-    "sha256": "ba13540f5feba0cdab4b41d60a56d261aebbdc8fc25c570706a4fbf51ab3f3d2",
-    "layout_replacements": []
+    "sha256": "ba13540f5feba0cdab4b41d60a56d261aebbdc8fc25c570706a4fbf51ab3f3d2"
   },
   {
-    "original_path": "configs/gmi_iglu_lab_ridge/nicheng.json",
     "path": "configs/gmi_iglu_lab_ridge/nicheng.json",
-    "original_sha256": "543d7a966e0c2ec32511b7f62febe1af951209161d58fff258c0cfea470c55fd",
-    "sha256": "543d7a966e0c2ec32511b7f62febe1af951209161d58fff258c0cfea470c55fd",
-    "layout_replacements": []
+    "sha256": "543d7a966e0c2ec32511b7f62febe1af951209161d58fff258c0cfea470c55fd"
   },
   {
-    "original_path": "configs/gmi_iglu_lab_ridge/zhao.json",
     "path": "configs/gmi_iglu_lab_ridge/zhao.json",
-    "original_sha256": "3b01b964385da43fee2631cd592426300971a2f8463d2f0ce28a58b0cb522b89",
-    "sha256": "3b01b964385da43fee2631cd592426300971a2f8463d2f0ce28a58b0cb522b89",
-    "layout_replacements": []
+    "sha256": "3b01b964385da43fee2631cd592426300971a2f8463d2f0ce28a58b0cb522b89"
   },
   {
-    "original_path": "configs/gmi_iglu_lab_ridge/zhao_no_t1d.json",
     "path": "configs/gmi_iglu_lab_ridge/zhao_no_t1d.json",
-    "original_sha256": "b19924bf01f482296871859b30d94ac8837a501a191203a9cb5f0eedbfdd0fae",
-    "sha256": "b19924bf01f482296871859b30d94ac8837a501a191203a9cb5f0eedbfdd0fae",
-    "layout_replacements": []
+    "sha256": "b19924bf01f482296871859b30d94ac8837a501a191203a9cb5f0eedbfdd0fae"
   },
   {
-    "original_path": "configs/lab/GluFormer_lab_ridge_scheduler.py",
     "path": "GluFormer_ridge_scheduler.py",
-    "original_sha256": "3273bf659a755b293ef1fcc5fb1de30cfa8dee25c81c96de41ec28815873b5ef",
-    "sha256": "beb44eda2ea920a6b8bd5b8f6d9d037c174bc9809ba8016e276b26b52de9f1ae",
-    "layout_replacements": [
-      {
-        "before": "REPO_ROOT = Path(__file__).resolve().parent.parent",
-        "after": "REPO_ROOT = Path(__file__).resolve().parent",
-        "count": 1
-      },
-      {
-        "before": "CODE_ROOT = REPO_ROOT / \"code\"",
-        "after": "CODE_ROOT = REPO_ROOT",
-        "count": 1
-      },
-      {
-        "before": "import lab_cv_runner as runner",
-        "after": "from LabelPredictionFinetune import lab_cv_runner as runner",
-        "count": 1
-      },
-      {
-        "before": "code/GluFormer_lab_ridge.py",
-        "after": "GluFormer_ridge_main.py",
-        "count": 1
-      }
-    ]
+    "sha256": "beb44eda2ea920a6b8bd5b8f6d9d037c174bc9809ba8016e276b26b52de9f1ae"
   },
   {
-    "original_path": "configs/lab/hpp_cgmanchored_incident_prepare.json",
     "path": "configs/lab/hpp_cgmanchored_incident_prepare.json",
-    "original_sha256": "29b284b27dd2aa1695414d52d4c8d3ae788e1f025f7473c36b8e93835d6e3e6f",
-    "sha256": "29b284b27dd2aa1695414d52d4c8d3ae788e1f025f7473c36b8e93835d6e3e6f",
-    "layout_replacements": []
+    "sha256": "29b284b27dd2aa1695414d52d4c8d3ae788e1f025f7473c36b8e93835d6e3e6f"
   },
   {
-    "original_path": "configs/lab/hpp_cgmanchored_incident_train_cgmfoundation.json",
     "path": "configs/lab/hpp_cgmanchored_incident_train_cgmfoundation.json",
-    "original_sha256": "80bfa4c5d4c0fa0bd5fe735a8ca5a4d540bb3c60e3fdb7790aefe46fff3de9b5",
-    "sha256": "80bfa4c5d4c0fa0bd5fe735a8ca5a4d540bb3c60e3fdb7790aefe46fff3de9b5",
-    "layout_replacements": []
+    "sha256": "80bfa4c5d4c0fa0bd5fe735a8ca5a4d540bb3c60e3fdb7790aefe46fff3de9b5"
   },
   {
-    "original_path": "configs/lab/hpp_new_lab_cgmfoundation_finetune.json",
     "path": "configs/lab/hpp_new_lab_cgmfoundation_finetune.json",
-    "original_sha256": "cc4de96bd8681e3c991a395968324d254f136cb8bdcc7448e2a859ecbf37f8e8",
-    "sha256": "cc4de96bd8681e3c991a395968324d254f136cb8bdcc7448e2a859ecbf37f8e8",
-    "layout_replacements": []
+    "sha256": "cc4de96bd8681e3c991a395968324d254f136cb8bdcc7448e2a859ecbf37f8e8"
   },
   {
-    "original_path": "configs/lab/hpp_new_lab_queue.json",
     "path": "configs/lab/hpp_new_lab_queue.json",
-    "original_sha256": "6f38239a26995cee6014c89a67713926a95e94709e92ed25c72c4ceb19de6028",
-    "sha256": "e4a30d3a66fc1c081d36ba84547352f92c7a56f7846c9df8ac72929f43bcf514",
-    "layout_replacements": [
-      {
-        "before": "code/CGMfoundation_lab.py",
-        "after": "LabelPredictionFinetune_CV_main.py",
-        "count": 1
-      }
-    ]
+    "sha256": "e4a30d3a66fc1c081d36ba84547352f92c7a56f7846c9df8ac72929f43bcf514"
   },
   {
-    "original_path": "configs/lab/hpp_prepare_full.json",
     "path": "configs/lab/hpp_prepare_full.json",
-    "original_sha256": "087cd5447c898766b2b8f52096904959273f047fea36872aa304f2cbb0b90081",
-    "sha256": "087cd5447c898766b2b8f52096904959273f047fea36872aa304f2cbb0b90081",
-    "layout_replacements": []
+    "sha256": "087cd5447c898766b2b8f52096904959273f047fea36872aa304f2cbb0b90081"
   },
   {
-    "original_path": "configs/lab/hpp_train_full.json",
     "path": "configs/lab/hpp_train_full.json",
-    "original_sha256": "5626a2ba6590b621c9967b06edadc4adddd8579bceaad2ddf129f76e3c4c19e8",
-    "sha256": "5626a2ba6590b621c9967b06edadc4adddd8579bceaad2ddf129f76e3c4c19e8",
-    "layout_replacements": []
+    "sha256": "5626a2ba6590b621c9967b06edadc4adddd8579bceaad2ddf129f76e3c4c19e8"
   },
   {
-    "original_path": "configs/lab/nicheng_new_queue.json",
     "path": "configs/lab/nicheng_new_queue.json",
-    "original_sha256": "1b0b9cd6e60c7543a24acff8e1f8321af856071f3812f7e2f5bc46a70946b777",
-    "sha256": "5c26d8fc32263cdba029a5e42a96277c1d713b71b5966b281da68410f1b02104",
-    "layout_replacements": [
-      {
-        "before": "code/CGMfoundation_lab.py",
-        "after": "LabelPredictionFinetune_CV_main.py",
-        "count": 1
-      }
-    ]
+    "sha256": "5c26d8fc32263cdba029a5e42a96277c1d713b71b5966b281da68410f1b02104"
   },
   {
-    "original_path": "configs/lab/nicheng_new_train_full.json",
     "path": "configs/lab/nicheng_new_train_full.json",
-    "original_sha256": "8ecb4e6b30dfecd957fb067d8fa17d9c036457f959cc27b7e35c179a8d83fb2b",
-    "sha256": "8ecb4e6b30dfecd957fb067d8fa17d9c036457f959cc27b7e35c179a8d83fb2b",
-    "layout_replacements": []
+    "sha256": "8ecb4e6b30dfecd957fb067d8fa17d9c036457f959cc27b7e35c179a8d83fb2b"
   },
   {
-    "original_path": "configs/lab/nicheng_prepare_cls_only.json",
     "path": "configs/lab/nicheng_prepare_cls_only.json",
-    "original_sha256": "51ba9def22451e28edf4aa6e573fc4273faee9a6cd84f0342c49d09a714574ce",
-    "sha256": "51ba9def22451e28edf4aa6e573fc4273faee9a6cd84f0342c49d09a714574ce",
-    "layout_replacements": []
+    "sha256": "51ba9def22451e28edf4aa6e573fc4273faee9a6cd84f0342c49d09a714574ce"
   },
   {
-    "original_path": "configs/lab/nicheng_queue.json",
     "path": "configs/lab/nicheng_queue.json",
-    "original_sha256": "16a66b483c6b1106a63e73490c194174f56f70a795d5ac2fabad9f4cfac0d900",
-    "sha256": "f8d10a0a8af1ff6c830018fc0083833658af9e73e91698bbfa6fc56c9baf8f01",
-    "layout_replacements": [
-      {
-        "before": "code/CGMfoundation_lab.py",
-        "after": "LabelPredictionFinetune_CV_main.py",
-        "count": 1
-      }
-    ]
+    "sha256": "f8d10a0a8af1ff6c830018fc0083833658af9e73e91698bbfa6fc56c9baf8f01"
   },
   {
-    "original_path": "configs/lab/nicheng_queue_cls_only.json",
     "path": "configs/lab/nicheng_queue_cls_only.json",
-    "original_sha256": "0007feda0bd2ce1e4b985b216d64738967b50e70d2b676ed3b9dc41cc9832196",
-    "sha256": "459e65d6d7cbb04afb96d81b207e67409398d933e5184cfb7fd3f05c182c268b",
-    "layout_replacements": [
-      {
-        "before": "code/CGMfoundation_lab.py",
-        "after": "LabelPredictionFinetune_CV_main.py",
-        "count": 1
-      }
-    ]
+    "sha256": "459e65d6d7cbb04afb96d81b207e67409398d933e5184cfb7fd3f05c182c268b"
   },
   {
-    "original_path": "configs/lab/nicheng_train_cls_only.json",
     "path": "configs/lab/nicheng_train_cls_only.json",
-    "original_sha256": "71456126351ad4446a09c2dafaee51fab8dba2a45a8f9af569b1f0d2a36ae0cd",
-    "sha256": "71456126351ad4446a09c2dafaee51fab8dba2a45a8f9af569b1f0d2a36ae0cd",
-    "layout_replacements": []
+    "sha256": "71456126351ad4446a09c2dafaee51fab8dba2a45a8f9af569b1f0d2a36ae0cd"
   },
   {
-    "original_path": "configs/lab/nicheng_train_full.json",
     "path": "configs/lab/nicheng_train_full.json",
-    "original_sha256": "ee2177813a9e93e85cc1f3ab3d98566c1431d7d463c87d6ef2a21bd2fc72e050",
-    "sha256": "ee2177813a9e93e85cc1f3ab3d98566c1431d7d463c87d6ef2a21bd2fc72e050",
-    "layout_replacements": []
+    "sha256": "ee2177813a9e93e85cc1f3ab3d98566c1431d7d463c87d6ef2a21bd2fc72e050"
   },
   {
-    "original_path": "configs/lab/train_queue_example.json",
     "path": "configs/lab/train_queue_example.json",
-    "original_sha256": "ddbb6a005510a1a78d931b6d6f223e57c9f3d389c9d2112f8157e634992e597c",
-    "sha256": "1dd833b9f45f2a19faf3e145bb2215fd100bdbade1b653fdd02a80d00ec30b70",
-    "layout_replacements": [
-      {
-        "before": "code/CGMfoundation_lab.py",
-        "after": "LabelPredictionFinetune_CV_main.py",
-        "count": 1
-      }
-    ]
+    "sha256": "1dd833b9f45f2a19faf3e145bb2215fd100bdbade1b653fdd02a80d00ec30b70"
   },
   {
-    "original_path": "configs/lab/zhao_prepare_full.json",
     "path": "configs/lab/zhao_prepare_full.json",
-    "original_sha256": "73ecb55d6bf9f442a2f1d344ae46d82ef4e6935b68a3d5d1b03ec421a34c9217",
-    "sha256": "73ecb55d6bf9f442a2f1d344ae46d82ef4e6935b68a3d5d1b03ec421a34c9217",
-    "layout_replacements": []
+    "sha256": "73ecb55d6bf9f442a2f1d344ae46d82ef4e6935b68a3d5d1b03ec421a34c9217"
   },
   {
-    "original_path": "configs/lab/zhao_prepare_no_t1d.json",
     "path": "configs/lab/zhao_prepare_no_t1d.json",
-    "original_sha256": "61f134865ccd99afd558cd6dd693c9d8baa715ea4ff618bf5886349520adfe92",
-    "sha256": "61f134865ccd99afd558cd6dd693c9d8baa715ea4ff618bf5886349520adfe92",
-    "layout_replacements": []
+    "sha256": "61f134865ccd99afd558cd6dd693c9d8baa715ea4ff618bf5886349520adfe92"
   },
   {
-    "original_path": "configs/lab/zhao_train_full.json",
     "path": "configs/lab/zhao_train_full.json",
-    "original_sha256": "714548b83acee532075a76bf41ee6270aee0cdbcfc58913ac92024a41366d41d",
-    "sha256": "714548b83acee532075a76bf41ee6270aee0cdbcfc58913ac92024a41366d41d",
-    "layout_replacements": []
+    "sha256": "714548b83acee532075a76bf41ee6270aee0cdbcfc58913ac92024a41366d41d"
   },
   {
-    "original_path": "configs/lab/zhao_train_no_t1d.json",
     "path": "configs/lab/zhao_train_no_t1d.json",
-    "original_sha256": "80e7bf5eecdc241f34c4e1af870914b3e6c72991456cead36a9820b2cd14883f",
-    "sha256": "80e7bf5eecdc241f34c4e1af870914b3e6c72991456cead36a9820b2cd14883f",
-    "layout_replacements": []
+    "sha256": "80e7bf5eecdc241f34c4e1af870914b3e6c72991456cead36a9820b2cd14883f"
   },
   {
-    "original_path": "configs/lab_runs/cgmfoundation_nicheng_corrected_01_fix.json",
     "path": "configs/lab_runs/cgmfoundation_nicheng_corrected_01_fix.json",
-    "original_sha256": "1f55cecbafb60ba93dfa785c47aab8de31b97f65ec8b5db1e86b2746c4a5762a",
-    "sha256": "1f55cecbafb60ba93dfa785c47aab8de31b97f65ec8b5db1e86b2746c4a5762a",
-    "layout_replacements": []
+    "sha256": "1f55cecbafb60ba93dfa785c47aab8de31b97f65ec8b5db1e86b2746c4a5762a"
   },
   {
-    "original_path": "configs/label_feature_lab_ridge/colas_incident_t2d_hba1c.json",
     "path": "configs/label_feature_lab_ridge/colas_incident_t2d_hba1c.json",
-    "original_sha256": "7cc1c78a68cc1eb83e9b3ffcd3438a97effce74679851a0c552832a124cf3b8c",
-    "sha256": "7cc1c78a68cc1eb83e9b3ffcd3438a97effce74679851a0c552832a124cf3b8c",
-    "layout_replacements": []
+    "sha256": "7cc1c78a68cc1eb83e9b3ffcd3438a97effce74679851a0c552832a124cf3b8c"
   },
   {
-    "original_path": "configs/label_feature_lab_ridge/hpp_cgmanchored_incident_180d_hba1c.json",
     "path": "configs/label_feature_lab_ridge/hpp_cgmanchored_incident_180d_hba1c.json",
-    "original_sha256": "7dc4cbb14d86c9b87c0a59fc106c3692cb60dcc54a5e251b4c2c0589289024cc",
-    "sha256": "7dc4cbb14d86c9b87c0a59fc106c3692cb60dcc54a5e251b4c2c0589289024cc",
-    "layout_replacements": []
+    "sha256": "7dc4cbb14d86c9b87c0a59fc106c3692cb60dcc54a5e251b4c2c0589289024cc"
   },
   {
-    "original_path": "configs/schedulers/cgmfoundation_nicheng_corrected_01_fix_scheduler.json",
     "path": "configs/schedulers/cgmfoundation_nicheng_corrected_01_fix_scheduler.json",
-    "original_sha256": "c1265bcc9fb7a2f5007f532d740632234bcde006df83b950b21509333f68885d",
-    "sha256": "725c615f506925eca6d85c33266a56b825b3de0da5655eccacedca736773cfd4",
-    "layout_replacements": [
-      {
-        "before": "code/CGMfoundation_lab.py",
-        "after": "LabelPredictionFinetune_CV_main.py",
-        "count": 1
-      }
-    ]
+    "sha256": "725c615f506925eca6d85c33266a56b825b3de0da5655eccacedca736773cfd4"
   },
   {
-    "original_path": "EventFinetune/Event_Finetune_data_utils.py",
     "path": "EventFinetune/Event_Finetune_data_utils.py",
-    "original_sha256": "a4317d606d273b82cbaa8a952909645c50e88fe70df5df3d495d7e1b0f900baf",
-    "sha256": "a4317d606d273b82cbaa8a952909645c50e88fe70df5df3d495d7e1b0f900baf",
-    "layout_replacements": []
+    "sha256": "a4317d606d273b82cbaa8a952909645c50e88fe70df5df3d495d7e1b0f900baf"
   },
   {
-    "original_path": "EventFinetune/Event_Finetune_model.py",
     "path": "EventFinetune/Event_Finetune_model.py",
-    "original_sha256": "db2e198feffddabc1e6d3f74b0061caf609bb722e2bd673986c19b2d493ec04d",
-    "sha256": "9ad51501e5f6e14ef16d84061d4a50ff2abf1ac49ffa59000822fa7967413479",
-    "layout_replacements": [
-      {
-        "before": "from models.base_model import CGMBaseModel",
-        "after": "from models.downstream_base_model import CGMBaseModel",
-        "count": 1
-      }
-    ]
+    "sha256": "9ad51501e5f6e14ef16d84061d4a50ff2abf1ac49ffa59000822fa7967413479"
   },
   {
-    "original_path": "EventFinetune/Event_loss_utils.py",
     "path": "EventFinetune/Event_loss_utils.py",
-    "original_sha256": "7a9c2e87b012bb3d50c8ea8189f6aecc0b8e49ca2a1d016d073470cd9f827f69",
-    "sha256": "7a9c2e87b012bb3d50c8ea8189f6aecc0b8e49ca2a1d016d073470cd9f827f69",
-    "layout_replacements": []
+    "sha256": "7a9c2e87b012bb3d50c8ea8189f6aecc0b8e49ca2a1d016d073470cd9f827f69"
   },
   {
-    "original_path": "models/base_model.py",
     "path": "models/downstream_base_model.py",
-    "original_sha256": "544ab0a4ca34694b9eb4134a24e298345154704aab254f1bc15f81bf7f42d881",
-    "sha256": "544ab0a4ca34694b9eb4134a24e298345154704aab254f1bc15f81bf7f42d881",
-    "layout_replacements": []
+    "sha256": "544ab0a4ca34694b9eb4134a24e298345154704aab254f1bc15f81bf7f42d881"
   },
   {
-    "original_path": "utils/data_utils.py",
     "path": "utils/downstream_data_utils.py",
-    "original_sha256": "4f46fe09dee613602cb6f3f4c7c3dc38ec4c9f3c38311a28a3867ed26f9e401f",
-    "sha256": "4f46fe09dee613602cb6f3f4c7c3dc38ec4c9f3c38311a28a3867ed26f9e401f",
-    "layout_replacements": []
+    "sha256": "4f46fe09dee613602cb6f3f4c7c3dc38ec4c9f3c38311a28a3867ed26f9e401f"
   },
   {
-    "original_path": "utils/train_utils.py",
     "path": "utils/downstream_train_utils.py",
-    "original_sha256": "238f08c03a3f77d9bca136c9565e53a6689812262238ec0c5662ef6d2c077504",
-    "sha256": "238f08c03a3f77d9bca136c9565e53a6689812262238ec0c5662ef6d2c077504",
-    "layout_replacements": []
+    "sha256": "238f08c03a3f77d9bca136c9565e53a6689812262238ec0c5662ef6d2c077504"
   }
 ]

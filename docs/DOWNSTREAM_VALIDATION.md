@@ -1,22 +1,48 @@
-# Validation of the GitHub-layout submission
+# Downstream workflow checks
 
-Platform: Windows, Python 3.12.10, CPU. Dependency versions: `requirements-tested.txt`.
+These commands check source-file integrity and execution of clinical and
+event-conditioned workflows. Install the repository dependencies and run from
+the repository root.
 
-Completed on 2026-10-08: source-integrity verification passed, all 17 submitted
-entry-point `--help` checks exited successfully, and the synthetic smoke run passed.
+## Source integrity
 
-Source integrity: 65 original files are mapped into the native upstream layout.
-23 files require only recorded import or path-string changes; all other files are
-byte-identical to their working copies. The exact replacements are checked against
-`D:/last` by `Others/verify_downstream_layout.py`.
+```bash
+python Others/verify_downstream_layout.py
+```
 
-Execution checks use the relocated original implementations with synthetic inputs,
-48 clinical samples, two folds and small random checkpoints. Clinical binary/multiclass
-classification and regression, three baseline methods, and the event trainer are
-exercised successfully. The event trainer ran two epochs and exported predictions. No research
-algorithm or hyperparameter defaults are modified for this check; reduced settings
-are supplied in separate temporary smoke configs.
+The verifier compares the 65 downstream files with the SHA-256 checksums in
+[`DOWNSTREAM_LAYOUT.json`](DOWNSTREAM_LAYOUT.json). The manifest identifies
+repository files and their expected contents.
 
-A smoke run validates execution only. GPU/multi-GPU, full cohort performance, original
-trained weights, optional expanded IGLU and manuscript metric reproduction are not
-covered. Local real datasets and experiment outputs remain untouched.
+## Command-line interfaces
+
+```bash
+python LabelPredictionFinetune_CV_main.py --help
+python CGMfoundation_ridge_main.py --help
+python GluFormer_ridge_main.py --help
+python GMI_IGLU_main.py --help
+python LabelFeature_ridge_main.py --help
+python EventFinetune_main.py --help
+python EventFinetune_AR_main.py --help
+```
+
+Use these interfaces to check accepted arguments before supplying cohort inputs
+and checkpoints. Dataset and task conventions are described in the
+[downstream guide](DOWNSTREAM.md).
+
+## Synthetic execution
+
+```bash
+python Others/smoke_downstream.py
+```
+
+The check creates synthetic CGM and labels, small random model checkpoints, and
+temporary configurations. It exercises clinical binary and multiclass
+classification, regression, feature baselines, event-conditioned training, and
+prediction export on the CPU. Its temporary data are separate from cohort inputs.
+
+Synthetic execution checks software behavior. Scientific performance estimates
+require the study data, trained checkpoints, and specified evaluation protocol.
+The optional `requirements-tested.txt` file lists pinned workflow-check
+dependencies; the pretraining environment is specified separately in
+`requirements-pretrain.txt`.

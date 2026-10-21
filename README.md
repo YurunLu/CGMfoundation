@@ -64,9 +64,9 @@ Before running an experiment, set the data, checkpoint, output, and device paths
 in its configuration. For pretraining, configure `data.csv_dir`,
 `data.hf_dataset_dir`, and `training.save_dir`; dataset construction and training
 must use the same `data.hf_dataset_dir`. Detailed input formats and preprocessing
-are described in the [pretraining guide](docs/PRETRAINING.md#csv-input) and
-[trajectory guide](docs/TRAJECTORY_DGP.md#export) and
-[manuscript DGP guide](docs/PAPER_DGP.md).
+are described in the [pretraining guide](docs/PRETRAINING.md#csv-input),
+[trajectory guide](docs/TRAJECTORY_DGP.md#export), and
+[DGP guide](docs/PAPER_DGP.md).
 
 ## Usage
 
@@ -174,9 +174,17 @@ origin. Outputs include `dgp_metrics.csv`, `calibration.json`, and
 `run_manifest.json`. See the [manuscript DGP guide](docs/PAPER_DGP.md) for
 definitions, checkpoint verification, missing-value rules, and reuse with a new
 encoder. Trajectory extraction uses offline imputation; interpret the profiles
-within that preprocessing framework. The earlier radial PLE and expansion/speed
-SLI workflow remains documented in the [legacy guide](docs/TRAJECTORY_DGP.md);
-its `DGP_main.py` command uses a different metric definition and calibration.
+within that preprocessing framework.
+
+## Documentation
+
+| Guide | Contents |
+| --- | --- |
+| [Pretraining and forecasting](docs/PRETRAINING.md) | Environment, CGM input, training, and forecast evaluation |
+| [Clinical and event prediction](docs/DOWNSTREAM.md) | Task configurations, input conventions, and model evaluation |
+| [Trajectory export](docs/TRAJECTORY_DGP.md) | Encoder settings, patch masks, timing, and output files |
+| [Manuscript DGP](docs/PAPER_DGP.md) | Frozen parameters, six indices, DRS, and reference-cohort reuse |
+| [DGP reproducibility checks](docs/TRAJECTORY_DGP_VALIDATION.md) | Parameter integrity and automated workflow checks |
 
 ## Repository structure
 

@@ -1,4 +1,4 @@
-"""Package the contribution at paths that can be overlaid on the upstream repo."""
+"""Create a downstream source archive with repository-relative file paths."""
 import argparse
 import hashlib
 import json
@@ -26,7 +26,7 @@ def main():
             archive.writestr(relative, data)
             manifest.append({"path": relative, "sha256": hashlib.sha256(data).hexdigest()})
         archive.writestr("SOURCE_MANIFEST.json", json.dumps(manifest, indent=2))
-    print(f"Packaged {len(paths)} files at upstream-relative paths: {args.output}")
+    print(f"Packaged {len(paths)} downstream source files: {args.output}")
 
 
 if __name__ == "__main__":

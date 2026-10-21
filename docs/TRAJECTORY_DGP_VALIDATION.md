@@ -1,66 +1,58 @@
-# Trajectory and DGP validation
+# Trajectory and DGP reproducibility checks
 
-Checked on 2026-10-12 against upstream commit
-`cee21194ff08410166b7a90f7dfcd4c295f907cc`.
+Run the following checks from the repository root after installing the
+dependencies. They cover frozen-parameter integrity, trajectory export, and
+calculation of the manuscript DGP indices.
 
-Environment: Windows, Python 3.12.14, PyTorch 2.6.0+cpu, NumPy 2.3.5,
-pandas 2.3.3, PyYAML 6.0.3. Dependencies were installed into an isolated local
-validation directory; the repository's existing environment files are preserved.
+## Frozen manuscript parameters
 
-## Source and execution checks
+```bash
+python Others/verify_paper_dgp_artifacts.py
+python Others/verify_paper_dgp_artifacts.py --checkpoint-path checkpoints/best_forecast_20260420_105114_dim256_patch144_stride3.pt --patch-dir outputs/patches/cohort
+```
 
-- All nine copied numerical functions match their recorded SHA256 hashes and the
-  original local source functions.
-- All three new entry-point `--help` commands passed.
-- Synthetic export matched direct inference from the same random encoder.
-- Exported masks matched `CGMForecastDataset`; string IDs and raw NaNs were retained.
-- Checkpoint metadata mismatches for stride, positional and temporal embedding
-  flags were rejected before writing outputs, including cases with unchanged
-  parameter shapes.
-- Empty recordings were excluded and existing nonempty outputs were rejected.
-- Synthetic reference fitting, NGT calibration and frozen application passed.
-- Both dataset and training DRS normalization ran successfully.
-- Invalid transitions across missing patches were excluded; short traces retained
-  missing estimates.
-- The existing downstream source verifier passed for all 65 recorded files.
+The verifier checks artifact hashes, reference dimensions and scales, calibration
+definitions, and numerical-function checksums. With the optional arguments, it
+also verifies the checkpoint file and trajectory metadata. The
+[artifact manifest](../artifacts/dgp/paper_20260826/reference_manifest.json)
+records the required checkpoint identity and export settings.
 
-Reproduce the public checks:
+## Synthetic execution
+
+```bash
+python Others/smoke_trajectory_dgp.py
+python Others/smoke_paper_dgp.py
+```
+
+The trajectory check uses synthetic CGM and a small random checkpoint. It checks
+embedding export against direct model inference, sample-column origin, both
+validity policies, observation masks, string IDs, missing-value retention,
+reference fitting, calibration, and output protection.
+
+The manuscript DGP check exercises a matched pulse-response pair with a known
+growth rate, missing follow-up handling, nighttime transition boundaries,
+within-night centering, and insufficient-data rules. It also checks rejection of
+an incorrect checkpoint hash, sample-column origin, or validity policy before
+output files are created.
+
+## Numerical-function integrity
 
 ```bash
 python Others/verify_trajectory_dgp_sources.py
-python Others/smoke_trajectory_dgp.py
-python Others/verify_downstream_layout.py
 ```
 
-## Read-only local numerical comparison
+Numerical functions are identified by module, function name, and SHA-256 in the
+corresponding checksum manifests. The manuscript artifact verifier checks the
+functions used by `DGP_paper.py`.
 
-The new calculator was applied to all 846 local Nicheng patch trajectories using
-the existing glycemic-basin reference, original NGT feature calibration and the
-current local PLE centering. Recording IDs were joined one-to-one to
-`ple_sli_current_results/tables/nicheng_current_dgp.csv`.
-All six indices and DRS matched at `rtol=1e-5, atol=1e-5`, including missingness.
+## Manuscript calculation checks
 
-| Metric | Maximum absolute difference |
-| --- | ---: |
-| TOB | 2.22e-16 |
-| HAD | 7.61e-08 |
-| DynVar | 3.12e-07 |
-| DynHBGI | 1.23e-06 |
-| PLE | 1.73e-16 |
-| SLI | 1.58e-14 |
-| DRS | 2.67e-08 |
+The [validation summary](../artifacts/dgp/paper_20260826/validation.json) covers
+the six DGP indices for 821 three-group Nicheng recordings and TPLE, SLI, and DRS
+for 208 Colas recordings. It also records public-command execution and reuse of
+the fixed calibration on a recording subset. Definitions and input requirements
+are in the [DGP guide](PAPER_DGP.md).
 
-Each compared metric had 846 nonmissing values in both versions. The parity check
-is available when the private local inputs are present:
-
-```bash
-python Others/verify_local_dgp_parity.py --original-root /path/to/CGMfoundation_support --report outputs/local_dgp_parity.json
-```
-
-Participant arrays, identifiers, labels, checkpoints and trained reference files
-are excluded from this contribution. GPU inference and multi-GPU execution were
-not tested. Numerical parity is scoped to the current Nicheng release and does
-not demonstrate forecast accuracy, clinical utility or performance superiority.
-New training references follow the same fitting formula but are not the original
-Nicheng reference; PCA signs, calibration and scores depend on the designated
-training cohort and encoder.
+Software and numerical checks do not establish clinical utility or prospective
+predictive performance. Evaluate scientific claims using the study protocol and
+an appropriate independent cohort.

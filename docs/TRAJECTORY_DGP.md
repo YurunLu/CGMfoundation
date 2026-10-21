@@ -1,168 +1,105 @@
-# Patch trajectory export and legacy radial PLE DGP
+# Latent CGM trajectory export
 
-For the **2026-08-26 manuscript definitions**, use
-[DGP_paper.py and the published frozen artifacts](PAPER_DGP.md).
-The `DGP_main.py` workflow below preserves the earlier radial PLE and
-expansion/speed SLI definitions. Its calibration cannot be interchanged with the
-manuscript TPLE and nocturnal-relaxation SLI calibration.
+`ExportTrajectory.py` extracts ordered patch embeddings from a trained
+CGMfoundation encoder. For manuscript DGP analysis, use the frozen export
+configuration and parameters described in the [DGP guide](PAPER_DGP.md).
 
 Run commands from the repository root after installing `requirements.txt` and a
-compatible PyTorch build. These entry points synchronize the current local
-numerical definitions into a portable workflow. They do not run the historical
-candidate search, clinical model selection, or manuscript plotting pipelines.
+compatible PyTorch build.
 
 ## Export
 
+Verify the manuscript checkpoint and export a cohort:
+
 ```bash
-python ExportTrajectory.py --csv-path data/cohort.csv --checkpoint-path checkpoints/forecast.pt --config configs/config_12h_3_12_256_12_8_1024_2_1.2_1all.yaml --output-dir outputs/patches/cohort --device cpu --batch-size 16
+python Others/verify_paper_dgp_artifacts.py --checkpoint-path checkpoints/best_forecast_20260420_105114_dim256_patch144_stride3.pt
+python ExportTrajectory.py --csv-path data/cohort.csv --checkpoint-path checkpoints/best_forecast_20260420_105114_dim256_patch144_stride3.pt --config artifacts/dgp/paper_20260826/export_config.json --output-dir outputs/patches/cohort --device cpu --batch-size 16
 ```
 
-The CSV requires an `id` column (configurable with `--id-column`) and numeric
-sample columns `1` through `max_seq_len - 1` by default, in mmol/L.
-The manuscript export configuration sets `export.sample_column_start: 0` and
-uses columns `0` through `3455`. The CLI option `--sample-column-start` can
-explicitly select `0` or `1`; the selected origin is recorded in metadata.
-IDs identify recordings;
-repeated visits need distinct recording IDs. IDs are read as strings, including
-leading zeroes. More than `max_seq_len * 0.1` observed samples are retained by
-default, following `GetMeanPatchEmb.py`. Empty/insufficient recordings are counted
-in metadata. No shuffle or mean pooling is applied.
+The CSV requires an `id` column, configurable with `--id-column`. For the
+manuscript configuration, provide sample columns `0` through `3455`, in mmol/L at
+five-minute intervals. Each row represents a recording. Repeated visits need
+distinct recording IDs; string IDs, including leading zeroes, are preserved.
 
-The config needs the training `model` section, including `patch_size`, `stride`,
-`forecast_steps`, `embed_dim`, `max_seq_len`, depth, heads, and embedding flags.
-YAML and JSON are supported. Model loading is strict; a mismatched architecture
-or checkpoint fails instead of producing partially initialized trajectories.
-When `model_hparams` is present in the checkpoint, configuration values are also
-checked against it, including stride and embedding flags that do not change
-weight shapes. For older checkpoints without this metadata, supply the exact
-training config; weight loading alone cannot verify these settings.
-Checkpoint wrappers `model_state_dict`, `state_dict`, and `model` are supported.
-Checkpoint files must be from a trusted training source and loadable with
-PyTorch's `weights_only=True` loader.
+The default recording filter retains more than `max_seq_len * 0.1` observed
+samples. Excluded recordings are counted in the metadata. The exporter preserves
+recording order and writes the full sequence of patch embeddings.
 
-| File | Shape/content |
+## Checkpoint and configuration
+
+YAML and JSON configurations are supported. The `model` section specifies patch
+size, stride, forecast reservation, embedding dimension, sequence length,
+Transformer depth and heads, and positional and temporal embedding settings.
+
+The manuscript configuration uses 144-sample patches, stride 3, a 12-sample
+forecast reservation, and a 256-dimensional encoder. It produces 1,101 patch
+slots from 3,456 samples. The `export` section sets:
+
+```json
+{
+  "sample_column_start": 0,
+  "validity_policy": "any-observed"
+}
+```
+
+For other applications, `--sample-column-start` selects zero- or one-based
+sample columns. `--validity-policy` selects `any-observed` or `dataset` validity.
+Explicit CLI options override the corresponding export configuration settings.
+The chosen settings are recorded in `meta.json`.
+
+Model parameters are loaded strictly. When checkpoint `model_hparams` are present,
+the exporter also checks settings such as stride and embedding flags that do not
+change tensor shapes. Checkpoint wrappers `model_state_dict`, `state_dict`, and
+`model` are supported. The loader uses `weights_only=True` with a restricted set
+of numerical scalar types for checkpoint training statistics.
+
+## Output files
+
+| File | Shape or contents |
 | --- | --- |
 | `patch_embeddings.npy` | float32 `[recording, patch, embedding_dimension]` |
-| `patch_raw.npy` | float32 `[recording, patch, patch_size]`, original values and NaNs |
-| `patch_valid_mask.npy` | boolean `[recording, patch]`, existing dataset validity policy |
-| `patch_observed_mask.npy` | boolean `[recording, patch, patch_size]`, raw observed samples |
-| `sample_ids.csv` | one `sample_id` per retained recording, same row order |
-| `meta.json` | model config, input/checkpoint/config hashes, timing, filtering and mask policies |
+| `patch_raw.npy` | float32 `[recording, patch, patch_size]`, original glucose values and NaNs |
+| `patch_valid_mask.npy` | boolean `[recording, patch]` |
+| `patch_observed_mask.npy` | boolean `[recording, patch, patch_size]`, original observation positions |
+| `sample_ids.csv` | One `sample_id` per retained recording, in array row order |
+| `meta.json` | Model and export settings, input/checkpoint/configuration hashes, timing, and filtering rules |
 
-The manuscript configuration also sets `export.validity_policy: any-observed`,
-which retains a window containing any original observation. `--validity-policy`
-can explicitly select `dataset` or `any-observed`; metadata records the choice.
+Arrays are written in batches using memory maps. Supply a new or empty output
+directory. Metadata are written after the array export completes.
 
-The existing dataset fills internal NaNs by linear interpolation and extends edge
-values. Its patch mask checks that the patch ends before the last observed sample;
-internal missing values do not invalidate the whole patch. This is the default
-`dataset` validity policy; the manuscript uses `any-observed` as described above.
-Observation masks are
-exported separately. This is an offline representation workflow: the inherited
-interpolation can use later observations and bridge internal missing intervals.
-Do not assume this preprocessing is a causal online warning pipeline.
+## Preprocessing and masks
 
-As in the existing exporter, patch starts reserve `forecast_steps` samples after
-each history patch, even though only embeddings are exported. Arrays are written
-in batches using memory maps. Use a new/empty output directory; existing exports
-are not overwritten. `meta.json` is written last, after successful array export.
+Model inputs use linear interpolation across missing values and extend the
+nearest available value at the sequence edges. Original values and observation
+positions are exported separately from the imputed model inputs.
 
-## Reference and calibration
+Under the manuscript `any-observed` policy, a patch is valid when it contains at
+least one original observation. Such a patch may extend beyond the final
+observation. Under `dataset`, validity requires the patch endpoint to precede or
+coincide with the last observed sample. Internal missing values are imputed under
+both policies.
 
-```bash
-python DGP_reference.py --patch-dir outputs/patches/train --labels data/train_labels.csv --output-dir outputs/reference
-python DGP_main.py --patch-dir outputs/patches/train --reference outputs/reference/glycemic_basin_reference.npz --calibrate-labels data/train_labels.csv --output-dir outputs/dgp/train
-python DGP_main.py --patch-dir outputs/patches/test --reference outputs/reference/glycemic_basin_reference.npz --calibration outputs/dgp/train/calibration.json --output-dir outputs/dgp/test
-```
+Patch starts reserve `forecast_steps` samples after each history window. This
+reservation is also applied when exporting embeddings. The preprocessing is
+intended for offline analysis; interpolation can use later observations and span
+internal gaps.
 
-The label CSV needs unique `sample_id` (or `id`) and `Type` values `NGT`, `PreDM`,
-`DM`, covering every calibration recording. Reference fitting uses all designated
-training patches to standardize embeddings and fit PCA (10 dimensions by default),
-then uses NGT patches for the healthy center, covariance, and 90th percentile
-basin threshold. The high-glycemia direction is defined by raw glucose risk weights
-in this training cohort, preserving the local reference formula. It requires raw
-patches in mmol/L. Reference fitting materializes valid training embeddings and
-standardized embeddings; allow approximately two full valid-embedding matrices
-plus PCA/covariance working memory.
+## Timing
 
-The NPZ contains `mean`, `sd`, `components`, `mu`, `inv_cov`, `threshold`, `u_high`,
-`high_mean`, `high_sd`, and `high_q95`. A compatible existing local
-`glycemic_basin_reference.npz` may also be supplied. Reuse the same encoder,
-reference and calibration for evaluation; do not refit using test labels.
-The calibration records the reference hash, metric version, encoder hash when
-available, NGT means/SDs and robust SLI scales, PLE centering, and training DRS
-scales. Legacy array exports lack encoder hashes, so their provenance must be
-verified separately. Newly exported incompatible encoder hashes are rejected.
+The default sample origin is midnight. The manuscript uses a 15-minute patch
+interval and a first patch endpoint at noon. `--sample-minutes` and
+`--start-minute` record the sampling interval and clock origin. The DGP command
+checks the timing against the frozen reference requirements. Transitions require
+consecutive valid patch indices; missing patches are not compressed into adjacent
+transitions.
 
-The current numerical kernels assume patch intervals of 15 minutes and the first
-patch endpoint at 12:00. The exporter assumes midnight sample origin by default;
-`--start-minute` records a different origin. DGP rejects incompatible timing.
-Legacy metadata with only patch size and stride uses the documented local
-5-minute, midnight-origin convention. It does not infer recording clock time from
-sample IDs. Nighttime is 00:00–06:00. Transitions and pulse horizons require
-consecutive valid patch indices; missing patches are never compressed into
-adjacent transitions.
-
-## Numerical definitions
-
-Let `PC_t = ((embedding_t - mean) / sd) @ components`,
-`V_t = (PC_t - mu)^T inv_cov (PC_t - mu)`,
-`s_t = (PC_t - mu)^T u_high`, and
-`a_t = (s_t - high_mean) / high_sd`.
-
-| Index | Current implementation |
-| --- | --- |
-| TOB | `1 - mean(V_t <= threshold)`; retains HBO_v1 internally |
-| HAD | `mean(a_t)` |
-| DynVar | NGT mean/SD standardized `sd(a_t, ddof=1)` |
-| DynHBGI | NGT mean/SD standardized `mean(max(a_t,0)^2) + 1.5*mean(s_t > high_q95)` |
-| PLE | 75th percentile pulse radial one-hour log ratio, minus fixed calibration NGT median |
-| SLI | `robust_z(q90(ell)) + robust_z(mean(ell>0)) + 1.5*robust_z(q90(speed))`, each component clipped to `[-8,8]` |
-
-For SLI, `r_t = sqrt(V_t)`, `ell = 4*log((r_next+1e-8)/(r_t+1e-8))`
-per hour, and `speed = norm(PC_next-PC_t)/(r_t+1e-8)`. Robust component
-normalization uses NGT median and `1.4826*MAD`, with IQR/SD fallbacks. The signed
-SLI scale is preserved.
-
-PLE uses Euclidean PCA displacement from the individual's nighttime median
-attractor (whole-recording median if fewer than 12 nighttime patches). Sparse
-outward jumps must exceed the original radial and flow thresholds. Peaks are
-selected within eight patches, separated by eight patches, and require an intact
-eight-patch follow-up. The scored radial ratio uses four patches (one hour):
-`log((r_peak+4 + 1e-8)/(r_peak + 1e-8)) / 1 hour`. PLE requires at least 80
-valid patches and an eligible event; no-event estimates remain NaN. It is a
-finite-time radial response proxy, not an asymptotic maximal Lyapunov exponent.
-The original Nicheng NGT centering constant was approximately
-`-0.256838948 h^-1`; new training calibration computes its own reference median.
-
-DRS is `z(HAD) + 0.5*max(z(PLE),0)*max(z(SLI),0)`. The default `z` uses the
-current export cohort's mean and population SD (`ddof=0`), matching the local
-current release. This score depends on cohort composition. Use
-`--drs-reference training` for frozen training normalization and compare only
-scores on the same recorded scale. Zero/undefined cohort SD yields NaN. Raw
-components, valid patch counts, pulse event counts and completeness are retained
-in `dgp_metrics.csv` alongside the six indices and DRS.
-
-## Provenance and checks
-
-[TRAJECTORY_DGP_SOURCES.json](TRAJECTORY_DGP_SOURCES.json) records the source
-paths and hashes of copied numerical functions. The adapters add argument
-parsing, portable I/O and validation; they preserve the current formulas.
+## Calculate DGP
 
 ```bash
-python Others/verify_trajectory_dgp_sources.py
-python Others/verify_trajectory_dgp_sources.py --original-root /path/to/CGMfoundation_support
-python Others/verify_local_dgp_parity.py --original-root /path/to/CGMfoundation_support
-python Others/smoke_trajectory_dgp.py
-python ExportTrajectory.py --help
-python DGP_reference.py --help
-python DGP_main.py --help
+python DGP_paper.py --patch-dir outputs/patches/cohort --reference artifacts/dgp/paper_20260826/glycemic_basin_reference.npz --calibration artifacts/dgp/paper_20260826/calibration.json --output-dir outputs/dgp/cohort
 ```
 
-The smoke check uses synthetic CGM, a random CPU checkpoint and artificial pulse
-trajectories in a temporary directory. It checks encoder parity, row/mask alignment,
-NaN preservation, overwrite refusal, reference fitting, calibration/application,
-both DRS normalization modes, missing transitions, and short traces.
-See [the validation record](TRAJECTORY_DGP_VALIDATION.md) for the separate local
-846-recording parity check. Numerical parity verifies synchronization of this
-release; it does not establish clinical validity or unbiased performance.
+The [DGP guide](PAPER_DGP.md) defines the six manuscript indices and DRS,
+describes checkpoint verification, and explains reference fitting for a new
+encoder. See [reproducibility checks](TRAJECTORY_DGP_VALIDATION.md) for the
+automated checks available with the source release.

@@ -1,26 +1,29 @@
-# Frozen manuscript DGP parameters
+# Manuscript DGP reference parameters
 
-These parameters reproduce the DGP definitions in the 2026-08-26 manuscript
-result package: `TOB`, `HAD`, `DynVar`, `DynHBGI`, `TPLE`, `SLI`, and the
-associated DRS. Use [`DGP_paper.py`](../../../DGP_paper.py), as described in the
-[manuscript DGP guide](../../../docs/PAPER_DGP.md).
+This directory contains the frozen parameters for `TOB`, `HAD`, `DynVar`,
+`DynHBGI`, `TPLE`, `SLI`, and DRS. Use
+[`DGP_paper.py`](../../../DGP_paper.py) with the accompanying export configuration.
+The [DGP guide](../../../docs/PAPER_DGP.md) provides the complete workflow and
+metric definitions.
 
-- [glycemic_basin_reference.npz](glycemic_basin_reference.npz): original frozen
-  reference, with ten PCA dimensions and a 256-dimensional encoder input.
-- [calibration.json](calibration.json): frozen metric normalization and definition.
-- [export_config.json](export_config.json): matching trajectory-export settings.
-- [reference_manifest.json](reference_manifest.json): checkpoint identity,
-  artifact hashes, and provenance.
-- [validation.json](validation.json): aggregate comparisons with manuscript results.
+| File | Contents |
+| --- | --- |
+| [glycemic_basin_reference.npz](glycemic_basin_reference.npz) | Embedding normalization, ten PCA axes, healthy basin, and glycemic direction for the 256-dimensional encoder |
+| [calibration.json](calibration.json) | Frozen NGT normalization and metric-definition settings |
+| [export_config.json](export_config.json) | Matching model, sample-column, and validity-mask settings |
+| [reference_manifest.json](reference_manifest.json) | Checkpoint identity, required export settings, and file checksums |
+| [validation.json](validation.json) | Summary of parameter and manuscript-calculation checks |
 
 The required checkpoint is
-`best_forecast_20260420_105114_dim256_patch144_stride3.pt`. Verify its SHA-256
-against the manifest before exporting trajectories. The weights must be obtained
-separately. The NPZ and JSON contain aggregate reference parameters; no individual
-CGM recordings or clinical labels are distributed here.
+`best_forecast_20260420_105114_dim256_patch144_stride3.pt`. Obtain the weights
+separately and verify their SHA-256 against the manifest before exporting
+trajectories. The frozen reference and calibration use the Nicheng reference
+cohort, including 200 NGT recordings for healthy-reference statistics.
 
-The original NPZ is preserved byte for byte. The JSON consolidates the original
-NGT statistics, including the HAD median/robust-scale normalization actually used
-in the source computations. TPLE uses matched pulse-response trajectories; SLI
-uses log-transformed nighttime relaxation time. Earlier radial PLE and
-expansion/speed SLI calibrations are incompatible with these definitions.
+TPLE measures growth of separation between matched pulse-response trajectories.
+SLI uses log-transformed nighttime relaxation time. HAD normalization for DRS uses
+the frozen NGT median and robust scale. Use the same reference and calibration for
+all evaluation recordings; evaluation labels are not required.
+
+These files contain aggregate parameters. Participant CGM recordings and clinical
+labels are not distributed in this repository.

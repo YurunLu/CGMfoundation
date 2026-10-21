@@ -7,8 +7,8 @@ a Linux host; select devices and paths appropriate for your environment.
 
 ## Environment
 
-The historical pretraining runs used Python 3.10 and PyTorch 2.6.0 with CUDA 12.4.
-`requirements-pretrain.txt` records their direct Python dependency versions,
+The pretraining environment uses Python 3.10 and PyTorch 2.6.0 with CUDA 12.4.
+`requirements-pretrain.txt` specifies the direct Python dependency versions,
 including Accelerate, Hugging Face Datasets, and Weights & Biases (W&B).
 
 ```bash
@@ -20,10 +20,9 @@ python -m pip install -r requirements-pretrain.txt
 
 The CUDA wheel command follows the
 [official PyTorch previous-version instructions](https://pytorch.org/get-started/previous-versions/).
-Use a compatible NVIDIA driver. A different CPU/CUDA build can be installed for
-another environment, but it is a different setup from the recorded GPU runs.
-The separate `requirements-tested.txt` file describes downstream checks on Windows
-with Python 3.12 and CPU; those checks do not establish pretraining performance.
+Use a compatible NVIDIA driver, or install a PyTorch build for the intended CPU
+or CUDA environment. The optional `requirements-tested.txt` file specifies
+dependencies for automated workflow checks.
 
 The trainer initializes W&B on the main process. To record runs locally without an
 online W&B session, set offline mode before launching training:
@@ -99,15 +98,15 @@ Two YAML files are supplied:
 | File | Role |
 | --- | --- |
 | `configs/config.yaml` | General configuration and the default builder/trainer configuration |
-| `configs/config_12h_3_12_256_12_8_1024_2_1.2_1all.yaml` | Recorded 500-epoch experiment settings with 12-hour patches and a 1-hour forecast |
+| `configs/config_12h_3_12_256_12_8_1024_2_1.2_1all.yaml` | Pretraining settings with 12-hour patches, a 1-hour forecast, and a maximum of 500 epochs |
 
-The files contain different experiment settings. Choose them deliberately and keep
-the dataset layout compatible with the model configuration. The recorded experiment
+Choose a configuration and keep the dataset layout compatible with its model
+settings. The supplied 12-hour configuration
 uses `patch_size=144`, `stride=3`, `forecast_steps=12`, `embed_dim=256`, `depth=12`,
 `num_heads=8`, `hidden_dim=1024`, `dropout=0.1`, positional encoding enabled, and
 temporal embedding disabled.
 
-Replace these three server-specific paths before using either configuration:
+Set these paths for the input data and output directories:
 
 | Key | Local value to provide |
 | --- | --- |
@@ -115,10 +114,9 @@ Replace these three server-specific paths before using either configuration:
 | `data.hf_dataset_dir` | Directory where the builder saves and the trainer loads the dataset |
 | `training.save_dir` | Directory for checkpoints and training logs |
 
-If you use `configs/config.yaml` to build data and the recorded experiment YAML to
-train, set **the same `data.hf_dataset_dir` in both files**. Keep `max_seq_len` and
-the intended data split consistent as well. The builder reads all `*.csv` files
-directly inside `data.csv_dir`.
+Use the same configuration for dataset construction and training. Keep
+`data.hf_dataset_dir`, `max_seq_len`, and the intended data split consistent.
+The builder reads all `*.csv` files directly inside `data.csv_dir`.
 
 You may edit the YAML paths or make local copies and pass their paths with `--config`.
 Both entry points default to the repository's `configs/config.yaml` when no
@@ -129,7 +127,7 @@ output location, seed, worker count, and W&B names are configured in YAML.
 ## Build the dataset
 
 ```bash
-python build_dataset.py --config configs/config.yaml
+python build_dataset.py --config configs/config_12h_3_12_256_12_8_1024_2_1.2_1all.yaml
 ```
 
 The builder writes the `train`, `validation`, and `test` splits under
@@ -140,7 +138,7 @@ settings.
 ## Train
 
 The following single-GPU example starts from random initialization and uses the
-recorded experiment configuration:
+12-hour pretraining configuration:
 
 ```bash
 export WANDB_MODE=offline
@@ -161,14 +159,13 @@ Adjust the visible GPU IDs and process count together. `training.batch_size` is 
 batch size per process; the trainer scales the configured learning rate by the
 square root of the process count. GPU count also affects optimizer updates per
 epoch and the wrapped scheduler. Record GPU count, batch size, learning rate,
-warmup settings, and selected epoch when comparing runs; changing GPU count does
-not preserve the same training trajectory or number of optimizer updates.
+warmup settings, and selected epoch when reporting or comparing runs.
 
 The training objective is masked clinical-weighted L1 loss. Default glucose
 thresholds are 3.9 and 10.0 mmol/L, with weights 2.0, 1.2, and 1.0 for low, high,
-and other observed target values. The recorded experiment sets a maximum of 500
+and other observed target values. The supplied configuration sets a maximum of 500
 epochs and patience of 20: training stops after 20 consecutive epochs without a
-strict improvement over the historical best validation loss. A new best resets
+strict improvement over the best validation loss. A new best resets
 the counter.
 
 Outputs under `training.save_dir` include:
@@ -200,7 +197,7 @@ configuration predicts 12 steps (1 hour) at each patch position, with earlier
 history patches available through causal attention.
 
 This evaluator uses a fixed `max_seq_len=3456`, matching the supplied configurations.
-Checkpoints with a different positional-buffer length require an adapted evaluator.
+Adapt the evaluation layout when using another positional-buffer length.
 
 Outputs include `time_slice_metrics.csv`, `mae_per_patch.csv`, `rmae_per_patch.csv`,
 `patient_level_metrics.csv`, and `patient_time_slice_metrics.csv`.
@@ -250,7 +247,7 @@ For `ar_step_size=3`, outputs are:
 This repository provides source code and configurations. Participant data and
 pretrained weights are not included. Training requires your own appropriately
 formatted cohort; evaluation requires both an external CSV and a compatible
-checkpoint. The downstream source and CPU execution checks are documented
-separately in [DOWNSTREAM.md](DOWNSTREAM.md) and
-[DOWNSTREAM_VALIDATION.md](DOWNSTREAM_VALIDATION.md); they are not a rerun of
-full pretraining or manuscript experiments.
+checkpoint. See the [downstream guide](DOWNSTREAM.md) for clinical and
+event-conditioned tasks and [workflow checks](DOWNSTREAM_VALIDATION.md) for
+automated execution checks. Frozen DGP reference parameters and their usage are
+described in the [DGP guide](PAPER_DGP.md).

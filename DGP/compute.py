@@ -1,4 +1,4 @@
-"""Portable assembly of current local DGP formulas with frozen calibration."""
+"""Calculate radial PLE DGP indices with a frozen reference and calibration."""
 from __future__ import annotations
 
 import argparse

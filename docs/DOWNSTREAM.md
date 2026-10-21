@@ -1,82 +1,114 @@
-# Downstream source organization
+# Clinical and event-conditioned prediction
 
-Target repository: https://github.com/YurunLu/CGMfoundation.git
-Inspected base: `572cea1911826872a7fb8db500c31a54dca6f146`.
+CGMfoundation supports clinical classification and regression through fine-tuning
+or prediction from frozen representations. Event-conditioned models incorporate
+annotated meals and other events. Run commands from the repository root after
+installing `requirements.txt` and a compatible PyTorch build.
 
-## Mapping to the existing format
+## Entry points
 
-| Original working file | Submitted location |
+| Entry point | Purpose |
 | --- | --- |
-| `code/CGMfoundation_lab.py` | `LabelPredictionFinetune_CV_main.py` |
-| `code/lab_cv_runner.py` | `LabelPredictionFinetune/lab_cv_runner.py` |
-| `code/CGMfoundation_lab_ridge.py` | `CGMfoundation_ridge_main.py` |
-| `code/GluFormer_lab_ridge.py` | `GluFormer_ridge_main.py` |
-| `code/GMI_IGLU_lab_ridge.py` | `GMI_IGLU_main.py` |
-| `code/LabelFeature_lab_ridge.py` | `LabelFeature_ridge_main.py` |
-| `code/CGMfoundation_lab_scheduler.py` | `LabelPredictionFinetune_scheduler.py` |
-| `configs/lab/GluFormer_lab_ridge_scheduler.py` | `GluFormer_ridge_scheduler.py` |
-| `code/EventFinetune_main.py` | `EventFinetune_main.py` |
-| `code/event_finetune_scheduler.py` | `EventFinetune_scheduler.py` |
-| `code/Eval_Event_AR_24h_FullContext.py` | `EventFinetune_AR_main.py` |
-| `code/export_event_*.py` | `EventFinetune/export_event_*.py` |
-| `code/export_lab_*.py` | `LabelPredictionFinetune/export_lab_*.py` |
-| `code/train_patchtst_baseline.py` | `GlucosePredictionBaseline/PatchTST_main.py` |
-| `models/base_model.py` | `models/downstream_base_model.py` |
-| `utils/data_utils.py` | `utils/downstream_data_utils.py` |
-| `utils/train_utils.py` | `utils/downstream_train_utils.py` |
+| `LabelPredictionFinetune_CV_main.py` | Clinical fine-tuning with cross-validation |
+| `CGMfoundation_ridge_main.py` | Prediction from frozen CGMfoundation representations |
+| `GluFormer_ridge_main.py` | Prediction from frozen GluFormer representations |
+| `GMI_IGLU_main.py` | Prediction from GMI and IGLU glucose summaries |
+| `LabelFeature_ridge_main.py` | Prediction from clinical features |
+| `EventFinetune_main.py` | Event-conditioned fine-tuning |
+| `EventFinetune_AR_main.py` | Autoregressive event-conditioned evaluation |
 
-The three event model/data/loss files retain their `EventFinetune/` locations and use
-the working versions. Existing upstream shared modules are preserved so that older
-pretraining and representation scripts continue to import their own versions.
+Clinical model components and fold preparation are in `LabelPredictionFinetune/`.
+Event data processing, model components, losses, and prediction exports are in
+`EventFinetune/`.
 
-`DOWNSTREAM_LAYOUT.json` records every source path, destination, original hash,
-submitted hash and exact import/path replacement. No architecture, loss, optimizer,
-preprocessing, data-split, normalization, training loop, metric or checkpoint-selection
-logic was modified. Files requiring no import/path adjustment remain byte-identical.
+## Clinical inputs
 
-```bash
-python Others/verify_downstream_layout.py --original-root D:/last
-```
+Provide CGM tables and clinical labels under `data_lab/<cohort>/`. Dataset file
+locations and label-table combinations are defined in
+`LabelPredictionFinetune/lab_cv_runner.py`. The supplied cohorts include Zhao,
+Nicheng, HPP, and Colas. Select the cohort and variant through the configuration.
+Keep glucose units, numeric sample-column ordering, recording IDs, and label
+encodings consistent with the selected dataset definition.
 
-## Original data and configuration conventions
+Target specifications use `cls:<column>` for classification and `reg:<column>`
+for regression. A target object can also specify included label values and an
+explicit label mapping. The `targets` list selects the analyses to run.
 
-Clinical data locations are defined in `LabelPredictionFinetune/lab_cv_runner.py`.
-The original `data_lab/` hierarchy, numeric time-step column names and label tables
-are retained. GluFormer/GMI read prepared folds at `data_lab/lab_target_cv/`; configure
-other runners to use the same experiment's fold location when comparing them.
+Prepared folds are stored under `data_lab/lab_target_cv/` by default. Set
+`split.split_root`, `split.n_splits`, and `split.seed` for the intended protocol.
+Reuse the same prepared folds across model comparisons. For repeated recordings,
+check that fold assignments respect the participant grouping required by the
+evaluation protocol.
 
-Event input files and channels follow the selected JSON. The event table retains the
-original CSV index convention (`index_col=0`), `device_id`, `TimeIndex` and event columns.
-No input adapter was added. Keep the original units, recording order and cohort labels.
+## Clinical fine-tuning
 
-Config directory depth is unchanged, preserving existing relative paths. Runner paths
-such as `../../code/CGMfoundation_lab.py` now point to
-`../../LabelPredictionFinetune_CV_main.py`. Absolute input/checkpoint paths are retained
-as experiment references and need local equivalents on a different machine.
-
-One source file, `configs/cgmfoundation_lab_ridge/hpp_cgmanchored_incident_180d_hba1c_available.json`,
-contains a shell command appended after its JSON object. It is retained as supplied;
-it is not a directly loadable JSON config. No experiment content was repaired during
-this organization task.
-
-## Branch integration
-
-The changes are integrated on a working branch based on the upstream repository.
-Clinical cross-validation is added through `LabelPredictionFinetune_CV_main.py`
-and modules in `LabelPredictionFinetune/`. The event entry point and three existing
-`EventFinetune/` modules are updated to the original working versions. Downstream
-model and utility versions use separate filenames to preserve existing upstream
-imports. Configuration files are integrated under `configs/`.
-
-Review the branch diff and open a pull request into the intended target branch.
-The source ZIP uses paths relative to the upstream
-root and contains only this contribution, not a complete standalone upstream clone.
-To regenerate it:
+Start with a configuration in `configs/lab/`. Set `pretrain.ckpt_path`,
+`training.out_root`, and the device settings before running:
 
 ```bash
-python Others/package_downstream.py --output cgm_downstream-source.zip
+python LabelPredictionFinetune_CV_main.py --config configs/lab/hpp_new_lab_cgmfoundation_finetune.json
 ```
 
-Participant data, split tables, checkpoints, logs, outputs and manuscript materials
-are excluded from the package. `requirements-tested.txt` describes only the local CPU
-validation environment; it does not replace the original experiment environment.
+The configuration controls target selection, fold preparation, optimization,
+encoder freezing, unfreezing, early stopping, and prediction exports. Use model
+settings compatible with the checkpoint. The wrapper also provides target listing
+and fold-preparation options; inspect them with:
+
+```bash
+python LabelPredictionFinetune_CV_main.py --help
+```
+
+## Frozen representations and feature baselines
+
+Choose a task configuration and provide the checkpoint and input files it requires:
+
+```bash
+python GluFormer_ridge_main.py --config configs/gluformer_lab_ridge/hpp_ridge.json
+python CGMfoundation_ridge_main.py --help
+python GMI_IGLU_main.py --help
+python LabelFeature_ridge_main.py --help
+```
+
+GluFormer and GMI/IGLU workflows consume prepared task folds. Point all compared
+methods to the same experiment's split directory. Clinical-feature baselines need
+the predictor columns requested by their configuration. Inspect each entry point
+for its checkpoint, output, and feature-selection options.
+
+## Event-conditioned inputs and training
+
+Configurations in `configs/event_finetune_tasks/` specify the following inputs:
+
+| Key | Input or setting |
+| --- | --- |
+| `data_csv` | CGM and event table |
+| `onehot_csv` | Aligned encoded event channels |
+| `pretrain_ckpt` | Compatible pretrained encoder checkpoint |
+| `out_dir` | Checkpoints, metrics, and prediction exports |
+| `event_cols` | Event variables used by the model |
+| `glucose_scale` | Input glucose scaling |
+| `device` | Training device |
+
+The event reader uses the first CSV column as its index and expects the dataset's
+`device_id`, `TimeIndex`, and configured event columns. Keep recording order and
+event-channel alignment consistent between the input tables. Set the file paths
+and device in the selected configuration, then run:
+
+```bash
+python EventFinetune_main.py --config configs/event_finetune_tasks/CGMacros.json
+```
+
+Prediction export is controlled by `export_predictions`, `prediction_split`, and
+the checkpoint-saving options. Additional event and clinical export utilities are
+provided in `EventFinetune/` and `LabelPredictionFinetune/`.
+
+## Outputs and reproducibility
+
+Output locations are configured for each task. Preserve the configuration,
+checkpoint identity, fold assignments, task definitions, metrics, and any exported
+predictions together. Participant data and trained checkpoints are not included
+in this repository. Input paths in the example configurations must be set to
+the files available in the user's environment.
+
+See [workflow checks](DOWNSTREAM_VALIDATION.md) for source-file and
+synthetic execution commands, and the [pretraining guide](PRETRAINING.md) for
+encoder training and forecast evaluation.

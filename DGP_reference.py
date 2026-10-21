@@ -1,4 +1,4 @@
-"""Fit the local glycemic-basin reference formula on a designated training cohort."""
+"""Fit a glycemic-basin reference on a designated reference cohort."""
 from __future__ import annotations
 import argparse
 import json

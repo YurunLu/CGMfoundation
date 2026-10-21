@@ -1,4 +1,4 @@
-"""Unmodified numerical kernels for the 2026-08-26 manuscript results."""
+"""Numerical kernels for the manuscript DGP definitions."""
 from __future__ import annotations
 from types import SimpleNamespace
 import numpy as np

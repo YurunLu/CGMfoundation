@@ -1,7 +1,6 @@
-"""Numerical kernels copied verbatim from the local current DGP workflow.
+"""Numerical kernels for radial PLE DGP calculation.
 
-See docs/TRAJECTORY_DGP_SOURCES.json for source locations and SHA256 hashes.
-Only imports and module constants are isolated from cohort-specific runners.
+See docs/TRAJECTORY_DGP_SOURCES.json for function checksums.
 """
 from __future__ import annotations
 import numpy as np

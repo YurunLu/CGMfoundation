@@ -9,7 +9,7 @@
     "filename": "best_forecast_20260420_105114_dim256_patch144_stride3.pt",
     "sha256": "acd49563b8a53514b69c08c70927315d1f5495e54a1ce45c8240033805121d36",
     "size_bytes": 132482814,
-    "hash_verification": "Computed on the original checkpoint file at its recorded research-server path",
+    "hash_verification": "SHA-256 of the manuscript checkpoint file",
     "model_state_sha256": "47c717fb6ce0368dfaad2c145ec3cf1865317939f5e15d1b6e8e1f21f043407e",
     "identity_verification": "Original-file SHA-256, model tensor digest, hyperparameters, input alignment, and validity-mask checks."
   },
@@ -47,19 +47,19 @@
     "embedding_standardization_and_pca": "All valid reference-cohort patches",
     "healthy_basin": "NGT patches; 90th percentile Mahalanobis threshold"
   },
-  "calibration_provenance": "Reconstructed from the original frozen NGT summary statistics; no reference refitting",
-  "source_sha256": {
-    "Results/DGP/GlycemicBasinCompactDGP/glycemic_basin_reference.npz": "86313a0c42f72d560b041d5296c6d2505641f57892b6ddd467e2791d58f72ccf",
-    "Results/DGP/FinalDGP/tables/patch_lvar_ngt_standardization.csv": "50bf7438c18611569c8e60bdf54e68b76874b2dd784e76118da404e8d2d71dcb",
-    "Results/DGP/GlycemicBasinCompactDGP/nosba_final_nicheng_analysis_table.csv": "db5c5742a406d77338658109df938428d245e703245463de401a60872ac3c074",
-    "Results/DGP/DGP_LyapunovIntegrated/ple_sli_theory_results/tables/drs_fixed_ngt_calibration.csv": "c2b551309a8ba7c8eef722e0645bfe059a090867c2d85a5d42c97d6758cea14a",
-    "Results/DGP/DGP_LyapunovIntegrated/DGP_section_results_20260825/result_manifest.json": "d092ab0cfbe2472c21f55758a221518b5bc0aca921284a54992e0f4a75bf9fa0",
-    "Results/DGP/DGP_LyapunovIntegrated/DGP_section_results_20260825/tables/Figure_01_DGP_boxplots_source_data.csv": "62913217bed7cc6a26405bcd35f2d401d44786ae9c46855bf91d2bdfd0a1c451"
-  },
+  "calibration_provenance": "Frozen Nicheng NGT summary statistics",
   "files_sha256": {
     "glycemic_basin_reference.npz": "86313a0c42f72d560b041d5296c6d2505641f57892b6ddd467e2791d58f72ccf",
     "calibration.json": "4ca4cfa53f0900d80155a9710a2ca76b546a743a440b91600091ec6837b0dd4e",
     "export_config.json": "e0fcc31788cfd894b5c8e2bde4e0f57ac322cc1a2402c6270fdd08525cc1cd85",
-    "validation.json": "2cd3715ee3fb5cb608ad299c2f9a4c76750a2e22d6483151ca67488da81b8892"
+    "validation.json": "fc9f4424c464f771c9e4997b6e16af2001bbdf96a6449bb4930968d42acaa286"
+  },
+  "source_checksums": {
+    "Nicheng reference parameters": "86313a0c42f72d560b041d5296c6d2505641f57892b6ddd467e2791d58f72ccf",
+    "Nicheng variability normalization statistics": "50bf7438c18611569c8e60bdf54e68b76874b2dd784e76118da404e8d2d71dcb",
+    "Nicheng glycemic feature summary": "db5c5742a406d77338658109df938428d245e703245463de401a60872ac3c074",
+    "Nicheng HAD normalization statistics": "c2b551309a8ba7c8eef722e0645bfe059a090867c2d85a5d42c97d6758cea14a",
+    "Manuscript analysis specification": "d092ab0cfbe2472c21f55758a221518b5bc0aca921284a54992e0f4a75bf9fa0",
+    "Manuscript DGP distribution source table": "62913217bed7cc6a26405bcd35f2d401d44786ae9c46855bf91d2bdfd0a1c451"
   }
 }

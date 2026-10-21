@@ -16,7 +16,7 @@ from DGP.paper import VERSION, DRS_FORMULA, validate_calibration
 from ExportTrajectory import sha256, load_checkpoint
 
 
-def verify(directory, checkpoint=None, patch_dir=None, original_root=None):
+def verify(directory, checkpoint=None, patch_dir=None):
     manifest = json.loads((directory / 'reference_manifest.json').read_text(encoding='utf-8'))
     if manifest.get('status') != 'verified' or manifest.get('release') != 'paper_20260826':
         raise ValueError('Artifact bundle is not a verified manuscript release')
@@ -47,17 +47,12 @@ def verify(directory, checkpoint=None, patch_dir=None, original_root=None):
         if np.min(np.linalg.eigvalsh(archive['inv_cov'])) <= 0:
             raise ValueError('Healthy precision must be positive definite')
     sources = json.loads((ROOT / 'docs/PAPER_DGP_SOURCES.json').read_text(encoding='utf-8'))
-    code = (ROOT / 'DGP/paper_kernels.py').read_text(encoding='utf-8')
+    code = (ROOT / sources['module']).read_text(encoding='utf-8')
     functions = {n.name: ast.get_source_segment(code, n) for n in ast.parse(code).body if isinstance(n, ast.FunctionDef)}
     for entry in sources['kernels']:
         body = functions[entry['function']]
         if hashlib.sha256(body.encode()).hexdigest() != entry['sha256']:
             raise ValueError(f'Paper kernel checksum mismatch: {entry["function"]}')
-        if original_root:
-            original = (original_root / entry['source']).read_text(encoding='utf-8-sig')
-            original_functions = {n.name: ast.get_source_segment(original, n) for n in ast.parse(original).body if isinstance(n, ast.FunctionDef)}
-            if body != original_functions[entry['function']]:
-                raise ValueError(f'Paper kernel differs from original: {entry["function"]}')
     if checkpoint:
         if sha256(checkpoint) != manifest['checkpoint']['sha256']:
             raise ValueError('Checkpoint SHA-256 does not match the manuscript encoder')
@@ -85,7 +80,7 @@ def verify(directory, checkpoint=None, patch_dir=None, original_root=None):
         meta = json.loads((patch_dir / 'meta.json').read_text(encoding='utf-8'))
         validate_calibration(calibration, reference, meta)
     return dict(release='paper_20260826', artifact_files=len(manifest['files_sha256']),
-                copied_kernels=len(sources['kernels']), local_checkpoint_file_checked=bool(checkpoint),
+                numerical_functions_checked=len(sources['kernels']), local_checkpoint_file_checked=bool(checkpoint),
                 trajectory_metadata_verified=bool(patch_dir))
 
 
@@ -94,6 +89,5 @@ if __name__ == '__main__':
     parser.add_argument('--artifact-dir', type=Path, default=ROOT / 'artifacts/dgp/paper_20260826')
     parser.add_argument('--checkpoint-path', type=Path)
     parser.add_argument('--patch-dir', type=Path)
-    parser.add_argument('--original-root', type=Path)
     args = parser.parse_args()
-    print(json.dumps(verify(args.artifact_dir, args.checkpoint_path, args.patch_dir, args.original_root), indent=2))
+    print(json.dumps(verify(args.artifact_dir, args.checkpoint_path, args.patch_dir), indent=2))

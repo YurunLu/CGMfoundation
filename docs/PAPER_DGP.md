@@ -3,8 +3,6 @@
 The manuscript workflow uses `TOB`, `HAD`, `DynVar`, `DynHBGI`, `TPLE`, and
 `SLI`. Run it with `DGP_paper.py` and the files in
 [`artifacts/dgp/paper_20260826/`](../artifacts/dgp/paper_20260826/README.md).
-The earlier `DGP_main.py` workflow has different PLE, SLI, and DRS definitions.
-Its calibration is not interchangeable with this release.
 
 ## Published files
 
@@ -16,9 +14,8 @@ Its calibration is not interchangeable with this release.
 | `reference_manifest.json` | Reference, calibration, configuration, and checkpoint SHA-256 checksums |
 | `validation.json` | Aggregate numerical checks against manuscript source results |
 
-The reference is the original NPZ, copied byte for byte. The calibration JSON
-consolidates the original reference-cohort statistics used by the manuscript
-scripts. The reference was fitted from Nicheng latent states; its healthy region
+The reference defines embedding normalization, ten PCA axes, a healthy basin,
+and a glycemic direction fitted from Nicheng latent states. The healthy region
 and metric normalization use 200 NGT recordings. Calibration does not use labels
 from the cohort being evaluated. Participant-level data are not included.
 
@@ -41,21 +38,18 @@ origin. See the [trajectory format](TRAJECTORY_DGP.md#export) for observation
 masks, interpolation, and recording selection.
 
 The frozen export configuration sets `export.sample_column_start` to `0`,
-matching the original 3,456-sample input and 1,101 patch slots. The legacy default
-starts at column `1`; shifting the sample origin changes the exported states.
-It also fixes `export.validity_policy` to `any-observed`, matching the manuscript
-arrays: a patch is valid when it contains at least one originally observed sample.
+giving 3,456 input samples and 1,101 patch slots.
+It also fixes `export.validity_policy` to `any-observed`: a patch is valid when
+it contains at least one originally observed sample.
 Such a patch may extend beyond the final observation. Model inputs use linear
 interpolation and edge extension. The public exporter retains original NaNs in
-`patch_raw.npy` and writes observation masks; the archived manuscript raw-patch
-arrays stored the already imputed model inputs. This storage difference does not
-change the exported encoder states.
+`patch_raw.npy` and writes observation masks separately from the imputed model inputs.
 
 `DGP_paper.py` checks the checkpoint hash and sample-column origin in the trajectory metadata against
 the frozen calibration. It also checks the reference hash and export settings.
 Equal tensor dimensions or a matching filename do not establish checkpoint
-compatibility. Legacy trajectories without an encoder hash must be exported
-again with the verified checkpoint before running the public command.
+compatibility. Trajectories must record the verified encoder hash before running
+the DGP command.
 
 Outputs are `dgp_metrics.csv`, a copy of `calibration.json`, and
 `run_manifest.json`. The table retains raw components, valid-patch counts,
@@ -107,9 +101,7 @@ DRS = (HAD - HAD_NGT_median) / HAD_NGT_robust_scale
 ```
 
 The fixed HAD center is `-0.1031305349141052`, and the robust scale is
-`0.4772495026293811`, as read by the original computation. The original Figure 05 description
-called this normalization mean/SD; the source code and numerical results use
-median/robust scale. This release follows the numerical results. The score does
+`0.4772495026293811`. The score does
 not normalize against the evaluated cohort. The formula and follow-up window
 were selected exploratorily and require independent prospective validation.
 
@@ -139,9 +131,9 @@ python Others/smoke_paper_dgp.py
 ```
 
 The first command validates bundled file hashes, reference geometry, calibration,
-and copied numerical kernels. Optional checkpoint verification checks the file
-SHA-256 and strict model loading. The validation report contains only aggregate
-errors and source-file hashes. It covers the 821 three-group Nicheng records in
+and numerical-function checksums. Optional checkpoint verification checks the file
+SHA-256 and strict model loading. The validation summary covers parameter
+identity, manuscript calculation, and public workflow checks. It covers the 821 three-group Nicheng records in
 the manuscript figure and the 208-record Colas DRS source table. Checkpoint
 identity, model hyperparameters, input alignment, and validity-mask checks are
 recorded in the artifact manifest and validation report.

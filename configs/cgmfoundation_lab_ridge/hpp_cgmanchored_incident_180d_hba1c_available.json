@@ -41,9 +41,3 @@
         "alpha_values": [0.001, 0.01, 0.1, 1.0, 10.0, 100.0, 1000.0, 10000.0]
     }
 }
-python -u EventFinetune_scheduler.py \
-  --gpus 0 \
-  --tasks zhao_full \
-  --pretrain_ckpt /workspace/last/best_forecast_20260428_003310_dim256_patch144_stride3.pt \
-  --out_dir data_event/event_finetune_outputs \
-  --run_name_prefix newmodel

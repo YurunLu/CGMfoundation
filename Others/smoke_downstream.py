@@ -1,4 +1,4 @@
-"""Run relocated original entry points in an isolated workspace with synthetic data."""
+"""Check clinical and event-conditioned workflows with synthetic data."""
 import argparse
 import importlib.util
 import json
