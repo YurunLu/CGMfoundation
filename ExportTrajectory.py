@@ -19,6 +19,18 @@ def sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
+def load_checkpoint(path):
+    """Load weights safely, including NumPy scalar training statistics."""
+    import torch
+    # The manuscript checkpoint includes a NumPy scalar validation statistic.
+    # Keep weights_only=True; allow only these numerical scalar/dtype classes.
+    scalar = np._core.multiarray.scalar if hasattr(np, '_core') else np.core.multiarray.scalar
+    allowed = [scalar, np.dtype]
+    allowed.extend({type(np.dtype(name)) for name in ['float32', 'float64', 'int32', 'int64', 'bool']})
+    with torch.serialization.safe_globals(allowed):
+        return torch.load(path, map_location='cpu', weights_only=True)
+
+
 def parse_args():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--csv-path', type=Path, required=True)
@@ -26,6 +38,10 @@ def parse_args():
     parser.add_argument('--config', type=Path, required=True, help='Training YAML or JSON; model section required')
     parser.add_argument('--output-dir', type=Path, required=True)
     parser.add_argument('--id-column', default='id')
+    parser.add_argument('--sample-column-start', type=int, choices=[0, 1], default=None,
+                        help='First glucose column; defaults to config export.sample_column_start or 1')
+    parser.add_argument('--validity-policy', choices=['dataset', 'any-observed'], default=None,
+                        help='Patch validity; defaults to config export.validity_policy or dataset')
     parser.add_argument('--batch-size', type=int, default=16)
     parser.add_argument('--device', default='cpu')
     parser.add_argument('--sample-minutes', type=float, default=5.0)
@@ -54,7 +70,7 @@ def export(args):
     model = CGMBaseModel(**model_config)
     # Checkpoints should come from a trusted training run. Strict loading prevents
     # silently exporting trajectories with missing/random encoder parameters.
-    checkpoint = torch.load(args.checkpoint_path, map_location='cpu', weights_only=True)
+    checkpoint = load_checkpoint(args.checkpoint_path)
     if isinstance(checkpoint, dict):
         # Flags and stride do not change parameter tensor shapes. Strict state
         # loading alone cannot detect a configuration that changes inference.
@@ -76,10 +92,18 @@ def export(args):
     if args.id_column not in frame:
         raise ValueError(f'Missing ID column: {args.id_column}')
     length = int(model_config['max_seq_len'])
-    columns = [str(i) for i in range(1, length)]
+    column_start = getattr(args, 'sample_column_start', None)
+    if column_start is None:
+        column_start = config.get('export', {}).get('sample_column_start', 1)
+    if column_start not in (0, 1):
+        raise ValueError('sample_column_start must be 0 or 1')
+    validity_policy = getattr(args, 'validity_policy', None) or config.get('export', {}).get('validity_policy', 'dataset')
+    if validity_policy not in ('dataset', 'any-observed'):
+        raise ValueError('validity_policy must be dataset or any-observed')
+    columns = [str(i) for i in range(column_start, length)]
     missing = set(columns) - set(frame.columns)
     if missing:
-        raise ValueError(f'Expected sample columns 1..{length - 1}; missing {len(missing)} columns')
+        raise ValueError(f'Expected sample columns {column_start}..{length - 1}; missing {len(missing)} columns')
     raw = frame[columns].apply(pd.to_numeric, errors='raise').to_numpy(dtype=np.float32)
     if np.isinf(raw).any():
         raise ValueError('CGM values must be finite or NaN')
@@ -111,7 +135,8 @@ def export(args):
             original = np.stack([raw[begin:end, start:start + model.patch_size] for start in dataset.starts], axis=1)
             arrays['patch_raw'][begin:end] = original
             arrays['patch_observed_mask'][begin:end] = np.isfinite(original)
-            arrays['patch_valid_mask'][begin:end] = torch.stack([item[1] for item in items]).numpy()
+            arrays['patch_valid_mask'][begin:end] = (np.isfinite(original).any(axis=-1) if validity_policy == 'any-observed'
+                                                    else torch.stack([item[1] for item in items]).numpy())
             print(f'Exported {end}/{n}', flush=True)
     for array in arrays.values():
         array.flush()
@@ -124,9 +149,12 @@ def export(args):
         'num_samples': n, 'num_patches': p, 'embed_dim': d,
         'patch_size': model.patch_size, 'stride': stride, 'forecast_steps': forecast,
         'sample_minutes': args.sample_minutes, 'start_minute': args.start_minute,
+        'sample_column_start': column_start, 'sample_column_end': length - 1,
         'first_patch_minute': args.start_minute + model.patch_size * args.sample_minutes,
         'patch_interval_minutes': stride * args.sample_minutes,
-        'units': 'mmol/L', 'mask_policy': 'existing CGMForecastDataset: patch ends before last observed sample',
+        'units': 'mmol/L', 'validity_policy': validity_policy,
+        'mask_policy': ('at least one originally observed sample in the patch' if validity_policy == 'any-observed'
+                        else 'existing CGMForecastDataset: patch ends before last observed sample'),
         'imputation': 'existing fill_nan_lin: linear interpolation; edge extension',
         'raw_policy': 'original values before interpolation',
         'excluded_sample_count': int((~keep).sum()),

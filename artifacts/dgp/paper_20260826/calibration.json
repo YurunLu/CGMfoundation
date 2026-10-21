@@ -1,0 +1,41 @@
+{
+  "version": "paper_20260826_trajectory_paired_tple_nightfixed_sli_v1",
+  "release": "paper_20260826",
+  "reference_sha256": "86313a0c42f72d560b041d5296c6d2505641f57892b6ddd467e2791d58f72ccf",
+  "checkpoint_sha256": "acd49563b8a53514b69c08c70927315d1f5495e54a1ce45c8240033805121d36",
+  "stats": {
+    "dynvar_raw": [
+      0.8422802872132498,
+      0.312724552089478
+    ],
+    "dynhbgi_raw": [
+      0.7666556738872516,
+      1.052824061107838
+    ],
+    "HAD": [
+      -0.1031305349141052,
+      0.4772495026293811
+    ]
+  },
+  "drs_formula": "z_NGT(HAD) + 0.25 * [(1 h) * TPLE + SLI]",
+  "calibration_recordings": 846,
+  "ngt_recordings": 200,
+  "normalization": {
+    "dynvar_raw": "NGT mean and sample SD (ddof=1)",
+    "dynhbgi_raw": "NGT mean and sample SD (ddof=1)",
+    "HAD": "NGT median and robust scale (1.4826*MAD with fallbacks)"
+  },
+  "tple": {
+    "dimensions": 5,
+    "horizon_patches": 4,
+    "horizon_hours": 1.0,
+    "clock_tolerance_patches": 96,
+    "theiler_patches": 12,
+    "minimum_pairs": 1
+  },
+  "sli": {
+    "minimum_night_transitions": 24,
+    "transform": "log1p(-1/log(rho))",
+    "rho": "night-fixed lag-one Pearson correlation of Mahalanobis radius"
+  }
+}

@@ -19,6 +19,7 @@ demo_workspace/
 *.safetensors
 *.npy
 *.npz
+!artifacts/dgp/paper_20260826/glycemic_basin_reference.npz
 *.arrow
 *.csv
 *.xlsx

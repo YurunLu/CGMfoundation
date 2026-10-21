@@ -1,0 +1,21 @@
+{
+  "model": {
+    "patch_size": 144,
+    "stride": 3,
+    "forecast_steps": 12,
+    "embed_dim": 256,
+    "max_seq_len": 3456,
+    "depth": 12,
+    "num_heads": 8,
+    "hidden_dim": 1024,
+    "dropout": 0.1,
+    "use_cnn": true,
+    "use_transformer": true,
+    "use_temporal": false,
+    "use_positional": true
+  },
+  "export": {
+    "sample_column_start": 0,
+    "validity_policy": "any-observed"
+  }
+}

@@ -1,0 +1,101 @@
+{
+  "release": "paper_20260826",
+  "kernels": [
+    {
+      "source": "Results/DGP/DGP_LyapunovIntegrated/code/screen_classical_latent_le.py",
+      "function": "phase_and_day",
+      "source_lines": [
+        37,
+        39
+      ],
+      "sha256": "c2183ca3f177860ece26dcae963ea0e55def74338129c6298d2e81463ba1ae6b"
+    },
+    {
+      "source": "Results/DGP/DGP_LyapunovIntegrated/code/screen_classical_latent_le.py",
+      "function": "metric_transform",
+      "source_lines": [
+        42,
+        47
+      ],
+      "sha256": "4e0d86d1a4ce4f763265184d71782d9f2bdfdfd937c07667031c74f3e2b30b70"
+    },
+    {
+      "source": "Results/DGP/DGP_LyapunovIntegrated/code/screen_pulse_conditioned_neighbor_le.py",
+      "function": "collapse",
+      "source_lines": [
+        36,
+        42
+      ],
+      "sha256": "fd6765736bbec5e715c5892eb0a0d712a69de98fe05bbbb0f78c510d8821e230"
+    },
+    {
+      "source": "Results/DGP/DGP_LyapunovIntegrated/code/screen_pulse_conditioned_neighbor_le.py",
+      "function": "detect_pulse_peaks",
+      "source_lines": [
+        45,
+        75
+      ],
+      "sha256": "dc1f7ee77e5ceec362b0dc098a8c5ebef87c82fb8764f492de64bcb319392b95"
+    },
+    {
+      "source": "Results/DGP/DGP_LyapunovIntegrated/code/screen_pulse_conditioned_neighbor_le.py",
+      "function": "circular_phase_distance",
+      "source_lines": [
+        78,
+        80
+      ],
+      "sha256": "d8c449ea524d2a0bbb0073f24ed3b4cd73df61ece4c5f2035943c182f27287ff"
+    },
+    {
+      "source": "Results/DGP/DGP_LyapunovIntegrated/code/screen_pulse_conditioned_neighbor_le.py",
+      "function": "pulse_neighbor_le",
+      "source_lines": [
+        83,
+        138
+      ],
+      "sha256": "9ccf6d80ed4435e42c6e37b25f54188b7bc5fabb2026a20f0b166cbbccc08e0e"
+    },
+    {
+      "source": "Results/DGP/DGP_LyapunovIntegrated/code/screen_uncalibrated_ple_classic_sli.py",
+      "function": "night_transition_blocks",
+      "source_lines": [
+        153,
+        166
+      ],
+      "sha256": "2ba4223047808dabaf864688681325642db7c06c6cb78ead4b8a91278e695e44"
+    },
+    {
+      "source": "Results/DGP/DGP_LyapunovIntegrated/code/screen_uncalibrated_ple_classic_sli.py",
+      "function": "lag_one_terms",
+      "source_lines": [
+        169,
+        224
+      ],
+      "sha256": "1329f45ba9209d6f0994dfbc693ecba0e5a4d2ea12fbbc6b4381782e32c5477d"
+    },
+    {
+      "source": "Results/DGP/DGP_LyapunovIntegrated/code/compute_ple_sli_v3.py",
+      "function": "robust_location_scale",
+      "source_lines": [
+        48,
+        66
+      ],
+      "sha256": "300137ba4406be020e69b96a87497a914baf3a948ed006d7b3c3e8b30664ef2f"
+    }
+  ],
+  "constants": {
+    "PATCHES_PER_DAY": 96,
+    "FIRST_PATCH_PHASE": 48,
+    "DT_HOURS": 0.25,
+    "EPS": 1e-08,
+    "COLLAPSE_PATCHES": 8,
+    "THEILER_PATCHES": 12,
+    "MIN_NIGHT_TRANSITIONS": 24
+  },
+  "assembly_sources": [
+    "Results/DGP/DGP_LyapunovIntegrated/code/compute_trajectory_paired_lyapunov_all_datasets.py",
+    "Results/DGP/DGP_LyapunovIntegrated/code/compute_ple_sli_v3.py",
+    "Results/DGP/DGP_LyapunovIntegrated/code/optimize_drs_colas_time_window.py",
+    "Results/DGP/DGP_LyapunovIntegrated/DGP_section_results_20260825/code/build_dgp_section_results.py"
+  ]
+}

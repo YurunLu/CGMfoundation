@@ -1,0 +1,151 @@
+{
+  "release": "paper_20260826",
+  "source_sha256": {
+    "Results/DGP/GlycemicBasinCompactDGP/glycemic_basin_reference.npz": "86313a0c42f72d560b041d5296c6d2505641f57892b6ddd467e2791d58f72ccf",
+    "Results/DGP/FinalDGP/tables/patch_lvar_ngt_standardization.csv": "50bf7438c18611569c8e60bdf54e68b76874b2dd784e76118da404e8d2d71dcb",
+    "Results/DGP/GlycemicBasinCompactDGP/nosba_final_nicheng_analysis_table.csv": "db5c5742a406d77338658109df938428d245e703245463de401a60872ac3c074",
+    "Results/DGP/DGP_LyapunovIntegrated/ple_sli_theory_results/tables/drs_fixed_ngt_calibration.csv": "c2b551309a8ba7c8eef722e0645bfe059a090867c2d85a5d42c97d6758cea14a",
+    "Results/DGP/DGP_LyapunovIntegrated/DGP_section_results_20260825/result_manifest.json": "d092ab0cfbe2472c21f55758a221518b5bc0aca921284a54992e0f4a75bf9fa0",
+    "Results/DGP/DGP_LyapunovIntegrated/DGP_section_results_20260825/tables/Figure_01_DGP_boxplots_source_data.csv": "62913217bed7cc6a26405bcd35f2d401d44786ae9c46855bf91d2bdfd0a1c451"
+  },
+  "paper_figure05_drs": {
+    "recordings": 208,
+    "had_normalization_max_error": 1.7763568394002505e-15,
+    "drs_max_error": 4.440892098500626e-16,
+    "matches": true,
+    "documentation_correction": "HAD normalization is NGT median/robust scale, as used by the source code and numerical table; old Figure 05 mean/SD wording was inaccurate."
+  },
+  "nicheng_figure01": {
+    "recordings": 821,
+    "metrics": {
+      "TOB": {
+        "matches": true,
+        "max_absolute_error": 2.498001805406602e-16,
+        "missing_new": 0,
+        "missing_source": 0
+      },
+      "HAD": {
+        "matches": true,
+        "max_absolute_error": 7.607609564530549e-08,
+        "missing_new": 0,
+        "missing_source": 0
+      },
+      "DynVar": {
+        "matches": true,
+        "max_absolute_error": 3.123610721189607e-07,
+        "missing_new": 0,
+        "missing_source": 0
+      },
+      "DynHBGI": {
+        "matches": true,
+        "max_absolute_error": 1.2323082074772174e-06,
+        "missing_new": 0,
+        "missing_source": 0
+      },
+      "TPLE": {
+        "matches": true,
+        "max_absolute_error": 8.881784197001252e-16,
+        "missing_new": 0,
+        "missing_source": 0
+      },
+      "SLI": {
+        "matches": true,
+        "max_absolute_error": 8.881784197001252e-16,
+        "missing_new": 0,
+        "missing_source": 0
+      }
+    }
+  },
+  "colas_full_recomputation": {
+    "recordings": 208,
+    "metrics": {
+      "TPLE": {
+        "matches": true,
+        "max_absolute_error": 8.881784197001252e-16
+      },
+      "SLI": {
+        "matches": true,
+        "max_absolute_error": 4.440892098500626e-16
+      },
+      "DRS": {
+        "matches": true,
+        "max_absolute_error": 2.7154970361209507e-07
+      }
+    }
+  },
+  "public_cli_verification": {
+    "recordings": 3,
+    "all_seven_metrics_match_direct_assembly": true,
+    "input": "Three full archived trajectories, copied without modification, with independently attested metadata",
+    "outputs": [
+      "dgp_metrics.csv",
+      "calibration.json",
+      "run_manifest.json"
+    ]
+  },
+  "checkpoint_inference": {
+    "original_checkpoint_sha256": "acd49563b8a53514b69c08c70927315d1f5495e54a1ce45c8240033805121d36",
+    "model_state_sha256": "47c717fb6ce0368dfaad2c145ec3cf1865317939f5e15d1b6e8e1f21f043407e",
+    "strict_state_loading": true,
+    "model_config": {
+      "patch_size": 144,
+      "stride": 3,
+      "forecast_steps": 12,
+      "embed_dim": 256,
+      "max_seq_len": 3456,
+      "depth": 12,
+      "num_heads": 8,
+      "hidden_dim": 1024,
+      "dropout": 0.1,
+      "use_cnn": true,
+      "use_transformer": true,
+      "use_temporal": false,
+      "use_positional": true
+    },
+    "recordings_tested": 3,
+    "patch_slots_per_recording": 1101,
+    "embedding_dimension": 256,
+    "rtol": 0.0001,
+    "atol": 1e-05,
+    "probes": [
+      {
+        "max_absolute_error": 0.0017201900482177734,
+        "mean_absolute_error": 0.00010629501775838435,
+        "matches": false
+      },
+      {
+        "max_absolute_error": 0.0014941692352294922,
+        "mean_absolute_error": 5.819184298161417e-05,
+        "matches": false
+      },
+      {
+        "max_absolute_error": 0.0010521411895751953,
+        "mean_absolute_error": 5.907219019718468e-05,
+        "matches": false
+      }
+    ],
+    "strict_cpu_replay_matches": false,
+    "checkpoint_identity_verified": true,
+    "identity_evidence": [
+      "Original checkpoint path agrees with all five archived cohort metadata files",
+      "Original-file SHA-256 computed at that path",
+      "All recorded model hyperparameters agree",
+      "Transferred model tensors match the digest computed from the original checkpoint",
+      "Strict state loading and local model-input alignment"
+    ],
+    "model_input_alignment_matches": true,
+    "archived_patch_raw_policy": "linearly imputed model-input patches",
+    "validity_masks_match": true,
+    "validity_policy": "any-observed",
+    "validity_policy_recordings_checked": 846
+  },
+  "synthetic_backend_comparison": {
+    "input_source": "seeded synthetic sinusoid plus Gaussian noise; no participant files opened",
+    "cuda_available": true,
+    "torch_version": "2.6.0+cu124",
+    "cudnn_allow_tf32": true,
+    "matmul_allow_tf32": false,
+    "cpu_cuda_max_absolute_error": 0.0005290508270263672,
+    "cpu_cuda_mean_absolute_error": 4.921390427625738e-05
+  }
+}

@@ -34,7 +34,8 @@ def check(directory):
     stride = model_args.pop('stride')
     model_args['forecast_size'] = model_args.pop('forecast_steps')
     model = CGMBaseModel(**model_args).eval()
-    torch.save({'model_state_dict': model.state_dict(), 'model_hparams': config['model']}, directory / 'checkpoint.pt')
+    torch.save({'model_state_dict': model.state_dict(), 'model_hparams': config['model'],
+                'best_val_loss': np.float64(0.25)}, directory / 'checkpoint.pt')
     (directory / 'config.json').write_text(json.dumps(config))
     data = rng.normal(6, 1, (6, length - 1)).astype(np.float32)
     data[0, 250:260] = np.nan
@@ -58,6 +59,28 @@ def check(directory):
         direct = model(torch.stack([dataset[i][0] for i in range(5)]), stride=stride, return_embedding=True).numpy()
     np.testing.assert_allclose(z, direct, rtol=1e-5, atol=1e-5)
     assert np.array_equal(mask, np.stack([dataset[i][1].numpy() for i in range(5)]))
+
+    # The manuscript input includes column zero. A frozen export config must
+    # preserve that sample rather than silently shifting the time origin.
+    zero_data = np.column_stack([data[:2], np.full(2, 7, dtype=np.float32)])
+    zero_frame = pd.DataFrame(zero_data, columns=map(str, range(length)))
+    zero_frame.insert(0, 'id', ids[:2])
+    zero_frame.to_csv(directory / 'zero_cgm.csv', index=False)
+    zero_config = dict(config, export={'sample_column_start': 0, 'validity_policy': 'any-observed'})
+    (directory / 'zero_config.json').write_text(json.dumps(zero_config))
+    zero_export = directory / 'zero_patches'
+    run(ROOT / 'ExportTrajectory.py', '--csv-path', directory / 'zero_cgm.csv',
+        '--checkpoint-path', directory / 'checkpoint.pt', '--config', directory / 'zero_config.json',
+        '--output-dir', zero_export, '--batch-size', '2')
+    zero_meta = json.loads((zero_export / 'meta.json').read_text())
+    assert zero_meta['sample_column_start'] == 0 and zero_meta['sample_column_end'] == length - 1
+    np.testing.assert_array_equal(np.load(zero_export / 'patch_raw.npy')[:, 0], zero_data[:, :144])
+    np.testing.assert_array_equal(np.load(zero_export / 'patch_valid_mask.npy'),
+                                  np.isfinite(np.load(zero_export / 'patch_raw.npy')).any(axis=-1))
+    zero_dataset = CGMForecastDataset(zero_data, patch_size=144, stride=3, forecast_steps=12)
+    with torch.inference_mode():
+        zero_direct = model(torch.stack([zero_dataset[i][0] for i in range(2)]), stride=3, return_embedding=True).numpy()
+    np.testing.assert_allclose(np.load(zero_export / 'patch_embeddings.npy'), zero_direct, rtol=1e-5, atol=1e-5)
     assert np.isnan(raw[0]).any() and not mask[1, -1]
     duplicate = subprocess.run([sys.executable, *map(str, command)], cwd=ROOT, capture_output=True)
     assert duplicate.returncode != 0 and b'FileExistsError' in duplicate.stderr

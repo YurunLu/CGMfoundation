@@ -54,16 +54,19 @@ identifiers should distinguish repeated visits from the same participant.
 
 Participant datasets and pretrained checkpoints are not included in this
 repository. Training requires user-supplied CGM data; evaluation and representation
-extraction additionally require a compatible trained checkpoint. DGP analysis
-requires a healthy reference and calibration, which can be fitted using the
-provided scripts and a designated reference cohort.
+extraction additionally require a trained checkpoint. The frozen reference and
+calibration used in the **2026-08-26 manuscript results** are included in
+[`artifacts/dgp/paper_20260826/`](artifacts/dgp/paper_20260826/README.md).
+These parameters require the exact manuscript checkpoint; its filename and
+SHA-256 are recorded in the accompanying manifest.
 
 Before running an experiment, set the data, checkpoint, output, and device paths
 in its configuration. For pretraining, configure `data.csv_dir`,
 `data.hf_dataset_dir`, and `training.save_dir`; dataset construction and training
 must use the same `data.hf_dataset_dir`. Detailed input formats and preprocessing
 are described in the [pretraining guide](docs/PRETRAINING.md#csv-input) and
-[trajectory and DGP guide](docs/TRAJECTORY_DGP.md).
+[trajectory guide](docs/TRAJECTORY_DGP.md#export) and
+[manuscript DGP guide](docs/PAPER_DGP.md).
 
 ## Usage
 
@@ -117,21 +120,23 @@ task configurations and input conventions.
 
 ### Latent trajectory export
 
-Export the ordered patch embeddings for a cohort:
+For manuscript DGP analysis, place the matching checkpoint in `checkpoints/`,
+verify it, and export the ordered patch embeddings using the frozen configuration:
 
 ```bash
-python ExportTrajectory.py --csv-path data/cohort.csv --checkpoint-path checkpoints/forecast.pt --config configs/config_12h_3_12_256_12_8_1024_2_1.2_1all.yaml --output-dir outputs/patches/cohort
+python Others/verify_paper_dgp_artifacts.py --checkpoint-path checkpoints/best_forecast_20260420_105114_dim256_patch144_stride3.pt
+python ExportTrajectory.py --csv-path data/cohort.csv --checkpoint-path checkpoints/best_forecast_20260420_105114_dim256_patch144_stride3.pt --config artifacts/dgp/paper_20260826/export_config.json --output-dir outputs/patches/cohort
 ```
 
 The export contains patch embeddings, original glucose patches, validity and
-observation masks, recording IDs, and metadata. Use the training configuration
-associated with the checkpoint. This entry point requires sample columns `1`
-through `max_seq_len - 1`; see the
+observation masks, recording IDs, and metadata. The export records the checkpoint
+hash, which the manuscript DGP command checks before calculation. The frozen
+manuscript configuration requires sample columns `0` through `3455`; see the
 [trajectory guide](docs/TRAJECTORY_DGP.md#export) for the complete format.
 
 ### Dynamic Glucore Profile
 
-DGP summarizes latent CGM trajectories using six complementary indices:
+The 2026-08-26 manuscript DGP summarizes latent CGM trajectories using six indices:
 
 | Index | Property characterized |
 | --- | --- |
@@ -139,39 +144,41 @@ DGP summarizes latent CGM trajectories using six complementary indices:
 | HAD | Mean displacement toward the high-glycemia direction |
 | DynVar | Within-recording variability along the glycemic axis |
 | DynHBGI | Positive-tail burden in the high-glycemia region |
-| PLE | Finite-time radial response following detected latent pulses |
-| SLI | Local stability loss from radial expansion and trajectory speed |
+| TPLE | One-hour growth of separation between matched pulse-response trajectories |
+| SLI | Log-transformed nocturnal relaxation time of the Mahalanobis radius |
 
-Fit the reference and calibration on designated training/reference recordings,
-then apply the frozen files to evaluation cohorts. Export the reference recordings
-to `outputs/patches/train` using the same encoder and configuration as above.
-The reference label table requires a unique `sample_id` (or `id`) and `Type`
-values of `NGT`, `PreDM`, or `DM`.
+Apply the published reference and calibration directly to the exported cohort.
+No evaluation labels or refitting are required:
 
 ```bash
-python DGP_reference.py --patch-dir outputs/patches/train --labels data/train_labels.csv --output-dir outputs/reference
-python DGP_main.py --patch-dir outputs/patches/train --reference outputs/reference/glycemic_basin_reference.npz --calibrate-labels data/train_labels.csv --output-dir outputs/dgp/train
-python DGP_main.py --patch-dir outputs/patches/cohort --reference outputs/reference/glycemic_basin_reference.npz --calibration outputs/dgp/train/calibration.json --output-dir outputs/dgp/cohort
+python DGP_paper.py --patch-dir outputs/patches/cohort --reference artifacts/dgp/paper_20260826/glycemic_basin_reference.npz --calibration artifacts/dgp/paper_20260826/calibration.json --output-dir outputs/dgp/cohort
 ```
 
 The analysis also exports the dynamic risk score:
 
 ```text
-DRS = z(HAD) + 0.5 × max(z(PLE), 0) × max(z(SLI), 0)
+DRS = z_NGT(HAD) + 0.25 × [(1 h) × TPLE + SLI]
 ```
 
-By default, DRS uses the evaluated cohort's mean and standard deviation. Use
-`--drs-reference training` to apply frozen training normalization. Compare scores
-using a consistent normalization scheme and fit references without evaluation
-labels. Missing pulse-response estimates are retained as missing values.
+Here `z_NGT(HAD)` uses the frozen Nicheng NGT median and robust scale.
+DynVar and DynHBGI use frozen NGT means and sample standard deviations.
+TPLE is measured in `h^-1`; SLI is `log(1 + tau)`, where `tau` is the
+night-fixed lag-one relaxation time in 15-minute steps. Missing trajectory-pair
+or relaxation estimates remain missing. DRS uses the same fixed scale across
+cohorts. The warning formula and follow-up window were selected exploratorily;
+prospective performance requires independent validation.
 
 The DGP implementation assumes 15-minute patch spacing and a first patch endpoint
 at noon, corresponding to the supplied 12-hour patches and a midnight recording
-origin. It retains the signed PLE and SLI scales. Outputs include
-`dgp_metrics.csv`, `calibration.json`, and `run_manifest.json`. See the
-[DGP guide](docs/TRAJECTORY_DGP.md#numerical-definitions) for formulas, timing,
-calibration, and interpretation. Trajectory extraction uses offline imputation;
-the exported profiles should be interpreted within that preprocessing framework.
+origin. Outputs include `dgp_metrics.csv`, `calibration.json`, and
+`run_manifest.json`. See the [manuscript DGP guide](docs/PAPER_DGP.md) for
+definitions, checkpoint verification, missing-value rules, and reuse with a new
+encoder. Trajectory extraction uses offline imputation; interpret the profiles
+within that preprocessing framework. The earlier radial PLE and expansion/speed
+SLI workflow remains documented in the [legacy guide](docs/TRAJECTORY_DGP.md);
+its `DGP_main.py` command uses a different metric definition and calibration.
+Observed CPU replay differences from the archived trajectories are recorded in
+the [validation report](artifacts/dgp/paper_20260826/validation.json).
 
 ## Repository structure
 
@@ -185,6 +192,7 @@ the exported profiles should be interpreted within that preprocessing framework.
 | `SampleRepresentation/`, `Trajectory/` | Representation learning and trajectory modeling |
 | `GlucosePredictionBaseline/` | Glucose forecasting baselines |
 | `DGP/` | Dynamic glycemic profile calculation |
+| `artifacts/dgp/paper_20260826/` | Frozen manuscript DGP reference, calibration, and export configuration |
 | `docs/` | Detailed installation, input, and workflow documentation |
 
 For questions about the code or reproducibility, please

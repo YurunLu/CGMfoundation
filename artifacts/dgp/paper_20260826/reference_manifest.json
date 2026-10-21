@@ -1,0 +1,65 @@
+{
+  "release": "paper_20260826",
+  "status": "verified",
+  "reference_sha256": "86313a0c42f72d560b041d5296c6d2505641f57892b6ddd467e2791d58f72ccf",
+  "trajectory_meta": {
+    "checkpoint_sha256": "acd49563b8a53514b69c08c70927315d1f5495e54a1ce45c8240033805121d36"
+  },
+  "checkpoint": {
+    "filename": "best_forecast_20260420_105114_dim256_patch144_stride3.pt",
+    "sha256": "acd49563b8a53514b69c08c70927315d1f5495e54a1ce45c8240033805121d36",
+    "size_bytes": 132482814,
+    "hash_verification": "Computed on the original checkpoint file at its recorded research-server path",
+    "model_state_sha256": "47c717fb6ce0368dfaad2c145ec3cf1865317939f5e15d1b6e8e1f21f043407e",
+    "inference_verification": "Original model identity, hyperparameters, and archived-input alignment verified; strict CPU replay differences retained in validation.json"
+  },
+  "export_requirements": {
+    "patch_size": 144,
+    "stride": 3,
+    "forecast_steps": 12,
+    "embed_dim": 256,
+    "sample_minutes": 5.0,
+    "start_minute": 0.0,
+    "first_patch_minute": 720.0,
+    "patch_interval_minutes": 15.0,
+    "sample_column_start": 0,
+    "sample_column_end": 3455,
+    "validity_policy": "any-observed",
+    "model_config": {
+      "patch_size": 144,
+      "embed_dim": 256,
+      "max_seq_len": 3456,
+      "depth": 12,
+      "num_heads": 8,
+      "hidden_dim": 1024,
+      "dropout": 0.1,
+      "use_cnn": true,
+      "use_transformer": true,
+      "use_temporal": false,
+      "use_positional": true,
+      "forecast_size": 12
+    }
+  },
+  "reference_cohort": {
+    "name": "Nicheng",
+    "total_recordings": 846,
+    "ngt_recordings": 200,
+    "embedding_standardization_and_pca": "All valid reference-cohort patches",
+    "healthy_basin": "NGT patches; 90th percentile Mahalanobis threshold"
+  },
+  "calibration_provenance": "Reconstructed from the original frozen NGT summary statistics; no reference refitting",
+  "source_sha256": {
+    "Results/DGP/GlycemicBasinCompactDGP/glycemic_basin_reference.npz": "86313a0c42f72d560b041d5296c6d2505641f57892b6ddd467e2791d58f72ccf",
+    "Results/DGP/FinalDGP/tables/patch_lvar_ngt_standardization.csv": "50bf7438c18611569c8e60bdf54e68b76874b2dd784e76118da404e8d2d71dcb",
+    "Results/DGP/GlycemicBasinCompactDGP/nosba_final_nicheng_analysis_table.csv": "db5c5742a406d77338658109df938428d245e703245463de401a60872ac3c074",
+    "Results/DGP/DGP_LyapunovIntegrated/ple_sli_theory_results/tables/drs_fixed_ngt_calibration.csv": "c2b551309a8ba7c8eef722e0645bfe059a090867c2d85a5d42c97d6758cea14a",
+    "Results/DGP/DGP_LyapunovIntegrated/DGP_section_results_20260825/result_manifest.json": "d092ab0cfbe2472c21f55758a221518b5bc0aca921284a54992e0f4a75bf9fa0",
+    "Results/DGP/DGP_LyapunovIntegrated/DGP_section_results_20260825/tables/Figure_01_DGP_boxplots_source_data.csv": "62913217bed7cc6a26405bcd35f2d401d44786ae9c46855bf91d2bdfd0a1c451"
+  },
+  "files_sha256": {
+    "glycemic_basin_reference.npz": "86313a0c42f72d560b041d5296c6d2505641f57892b6ddd467e2791d58f72ccf",
+    "calibration.json": "4ca4cfa53f0900d80155a9710a2ca76b546a743a440b91600091ec6837b0dd4e",
+    "export_config.json": "e0fcc31788cfd894b5c8e2bde4e0f57ac322cc1a2402c6270fdd08525cc1cd85",
+    "validation.json": "f120d783da4d7cb461fdbdaf19bec0e27d7d4cf229bdd02796fab11d8443fb92"
+  }
+}

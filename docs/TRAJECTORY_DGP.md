@@ -1,4 +1,10 @@
-# Patch trajectory export and current DGP
+# Patch trajectory export and legacy radial PLE DGP
+
+For the **2026-08-26 manuscript definitions**, use
+[DGP_paper.py and the published frozen artifacts](PAPER_DGP.md).
+The `DGP_main.py` workflow below preserves the earlier radial PLE and
+expansion/speed SLI definitions. Its calibration cannot be interchanged with the
+manuscript TPLE and nocturnal-relaxation SLI calibration.
 
 Run commands from the repository root after installing `requirements.txt` and a
 compatible PyTorch build. These entry points synchronize the current local
@@ -12,7 +18,11 @@ python ExportTrajectory.py --csv-path data/cohort.csv --checkpoint-path checkpoi
 ```
 
 The CSV requires an `id` column (configurable with `--id-column`) and numeric
-sample columns `1` through `max_seq_len - 1`, in mmol/L. IDs identify recordings;
+sample columns `1` through `max_seq_len - 1` by default, in mmol/L.
+The manuscript export configuration sets `export.sample_column_start: 0` and
+uses columns `0` through `3455`. The CLI option `--sample-column-start` can
+explicitly select `0` or `1`; the selected origin is recorded in metadata.
+IDs identify recordings;
 repeated visits need distinct recording IDs. IDs are read as strings, including
 leading zeroes. More than `max_seq_len * 0.1` observed samples are retained by
 default, following `GetMeanPatchEmb.py`. Empty/insufficient recordings are counted
@@ -39,9 +49,15 @@ PyTorch's `weights_only=True` loader.
 | `sample_ids.csv` | one `sample_id` per retained recording, same row order |
 | `meta.json` | model config, input/checkpoint/config hashes, timing, filtering and mask policies |
 
+The manuscript configuration also sets `export.validity_policy: any-observed`,
+which retains a window containing any original observation. `--validity-policy`
+can explicitly select `dataset` or `any-observed`; metadata records the choice.
+
 The existing dataset fills internal NaNs by linear interpolation and extends edge
 values. Its patch mask checks that the patch ends before the last observed sample;
-internal missing values do not invalidate the whole patch. Observation masks are
+internal missing values do not invalidate the whole patch. This is the default
+`dataset` validity policy; the manuscript uses `any-observed` as described above.
+Observation masks are
 exported separately. This is an offline representation workflow: the inherited
 interpolation can use later observations and bridge internal missing intervals.
 Do not assume this preprocessing is a causal online warning pipeline.
