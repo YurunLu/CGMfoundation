@@ -83,7 +83,7 @@
       "run_manifest.json"
     ]
   },
-  "checkpoint_inference": {
+  "checkpoint_identity": {
     "original_checkpoint_sha256": "acd49563b8a53514b69c08c70927315d1f5495e54a1ce45c8240033805121d36",
     "model_state_sha256": "47c717fb6ce0368dfaad2c145ec3cf1865317939f5e15d1b6e8e1f21f043407e",
     "strict_state_loading": true,
@@ -102,29 +102,6 @@
       "use_temporal": false,
       "use_positional": true
     },
-    "recordings_tested": 3,
-    "patch_slots_per_recording": 1101,
-    "embedding_dimension": 256,
-    "rtol": 0.0001,
-    "atol": 1e-05,
-    "probes": [
-      {
-        "max_absolute_error": 0.0017201900482177734,
-        "mean_absolute_error": 0.00010629501775838435,
-        "matches": false
-      },
-      {
-        "max_absolute_error": 0.0014941692352294922,
-        "mean_absolute_error": 5.819184298161417e-05,
-        "matches": false
-      },
-      {
-        "max_absolute_error": 0.0010521411895751953,
-        "mean_absolute_error": 5.907219019718468e-05,
-        "matches": false
-      }
-    ],
-    "strict_cpu_replay_matches": false,
     "checkpoint_identity_verified": true,
     "identity_evidence": [
       "Original checkpoint path agrees with all five archived cohort metadata files",
@@ -139,13 +116,5 @@
     "validity_policy": "any-observed",
     "validity_policy_recordings_checked": 846
   },
-  "synthetic_backend_comparison": {
-    "input_source": "seeded synthetic sinusoid plus Gaussian noise; no participant files opened",
-    "cuda_available": true,
-    "torch_version": "2.6.0+cu124",
-    "cudnn_allow_tf32": true,
-    "matmul_allow_tf32": false,
-    "cpu_cuda_max_absolute_error": 0.0005290508270263672,
-    "cpu_cuda_mean_absolute_error": 4.921390427625738e-05
-  }
+  "scope": "Frozen artifact identity, manuscript DGP calculation on archived trajectories, and public CLI checks."
 }

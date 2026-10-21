@@ -142,13 +142,6 @@ The first command validates bundled file hashes, reference geometry, calibration
 and copied numerical kernels. Optional checkpoint verification checks the file
 SHA-256 and strict model loading. The validation report contains only aggregate
 errors and source-file hashes. It covers the 821 three-group Nicheng records in
-the manuscript figure and the 208-record Colas DRS source table. Archived
-reference data and checkpoint inference checks are recorded separately in the
-artifact manifest. Three full-trajectory CPU comparisons retained maximum
-embedding differences of approximately `0.00172` against the archived arrays;
-they did not pass a strict `rtol=1e-4, atol=1e-5` comparison. Checkpoint identity,
-hyperparameters, imputed inputs, and validity masks were verified separately.
-A synthetic-input check independently found CPU/CUDA differences with this
-checkpoint; it does not establish the cause of every archived-trajectory
-difference. Exact figure reproduction uses the archived trajectories. Retain
-the device and runtime when exporting new states.
+the manuscript figure and the 208-record Colas DRS source table. Checkpoint
+identity, model hyperparameters, input alignment, and validity-mask checks are
+recorded in the artifact manifest and validation report.

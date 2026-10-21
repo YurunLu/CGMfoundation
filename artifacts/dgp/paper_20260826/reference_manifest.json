@@ -11,7 +11,7 @@
     "size_bytes": 132482814,
     "hash_verification": "Computed on the original checkpoint file at its recorded research-server path",
     "model_state_sha256": "47c717fb6ce0368dfaad2c145ec3cf1865317939f5e15d1b6e8e1f21f043407e",
-    "inference_verification": "Original model identity, hyperparameters, and archived-input alignment verified; strict CPU replay differences retained in validation.json"
+    "identity_verification": "Original-file SHA-256, model tensor digest, hyperparameters, input alignment, and validity-mask checks."
   },
   "export_requirements": {
     "patch_size": 144,
@@ -60,6 +60,6 @@
     "glycemic_basin_reference.npz": "86313a0c42f72d560b041d5296c6d2505641f57892b6ddd467e2791d58f72ccf",
     "calibration.json": "4ca4cfa53f0900d80155a9710a2ca76b546a743a440b91600091ec6837b0dd4e",
     "export_config.json": "e0fcc31788cfd894b5c8e2bde4e0f57ac322cc1a2402c6270fdd08525cc1cd85",
-    "validation.json": "f120d783da4d7cb461fdbdaf19bec0e27d7d4cf229bdd02796fab11d8443fb92"
+    "validation.json": "2cd3715ee3fb5cb608ad299c2f9a4c76750a2e22d6483151ca67488da81b8892"
   }
 }

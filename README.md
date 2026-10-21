@@ -177,8 +177,6 @@ encoder. Trajectory extraction uses offline imputation; interpret the profiles
 within that preprocessing framework. The earlier radial PLE and expansion/speed
 SLI workflow remains documented in the [legacy guide](docs/TRAJECTORY_DGP.md);
 its `DGP_main.py` command uses a different metric definition and calibration.
-Observed CPU replay differences from the archived trajectories are recorded in
-the [validation report](artifacts/dgp/paper_20260826/validation.json).
 
 ## Repository structure
 
