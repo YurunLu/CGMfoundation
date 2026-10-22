@@ -12,9 +12,9 @@ from DGP.compute import load_inputs
 from DGP.paper_kernels import detect_pulse_peaks, pulse_neighbor_le, night_transition_blocks, lag_one_terms, robust_location_scale
 from ExportTrajectory import sha256
 
-VERSION = 'paper_20260826_trajectory_paired_tple_nightfixed_sli_v1'
+VERSION = 'paper_20260826_trajectory_paired_tple_nightfixed_sli_v2'
 METRICS = ['TOB', 'HAD', 'DynVar', 'DynHBGI', 'TPLE', 'SLI']
-DRS_FORMULA = 'z_NGT(HAD) + 0.25 * [(1 h) * TPLE + SLI]'
+DRS_FORMULA = 'z_NGT(HAD) + 0.25 * [(1 h) * TPLE]_+ * SLI'
 
 
 def raw_metrics(directory, reference_path):
@@ -103,7 +103,7 @@ def assemble(raw, calibration):
         frame[metric] = (frame[source] - center) / scale
     center, scale = calibration['stats']['HAD']
     frame['zNGT_HAD'] = (frame.HAD - center) / scale
-    frame['DRS'] = frame.zNGT_HAD + 0.25 * (frame.TPLE + frame.SLI)
+    frame['DRS'] = frame.zNGT_HAD + 0.25 * frame.TPLE.clip(lower=0) * frame.SLI
     frame['definition_version'] = VERSION
     frame['TPLE_unit'] = 'h^-1'
     frame['SLI_unit'] = 'log1p(15-minute steps)'

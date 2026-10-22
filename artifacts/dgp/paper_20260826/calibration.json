@@ -1,5 +1,5 @@
 {
-  "version": "paper_20260826_trajectory_paired_tple_nightfixed_sli_v1",
+  "version": "paper_20260826_trajectory_paired_tple_nightfixed_sli_v2",
   "release": "paper_20260826",
   "reference_sha256": "86313a0c42f72d560b041d5296c6d2505641f57892b6ddd467e2791d58f72ccf",
   "checkpoint_sha256": "acd49563b8a53514b69c08c70927315d1f5495e54a1ce45c8240033805121d36",
@@ -17,7 +17,7 @@
       0.4772495026293811
     ]
   },
-  "drs_formula": "z_NGT(HAD) + 0.25 * [(1 h) * TPLE + SLI]",
+  "drs_formula": "z_NGT(HAD) + 0.25 * [(1 h) * TPLE]_+ * SLI",
   "calibration_recordings": 846,
   "ngt_recordings": 200,
   "normalization": {

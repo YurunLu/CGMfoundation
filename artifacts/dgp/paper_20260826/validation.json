@@ -18,9 +18,16 @@
       "recordings": 208,
       "metrics": [
         "TPLE",
-        "SLI",
+        "SLI"
+      ],
+      "validated": true
+    },
+    "Colas progression": {
+      "recordings": 188,
+      "metrics": [
         "DRS"
       ],
+      "max_absolute_error": 2.7154970361209507e-07,
       "validated": true
     }
   },
@@ -56,7 +63,8 @@
       "dgp_metrics.csv",
       "calibration.json",
       "run_manifest.json"
-    ]
+    ],
+    "positive_part_interaction_verified": true
   },
   "source_checksums": {
     "Nicheng reference parameters": "86313a0c42f72d560b041d5296c6d2505641f57892b6ddd467e2791d58f72ccf",
@@ -64,6 +72,10 @@
     "Nicheng glycemic feature summary": "db5c5742a406d77338658109df938428d245e703245463de401a60872ac3c074",
     "Nicheng HAD normalization statistics": "c2b551309a8ba7c8eef722e0645bfe059a090867c2d85a5d42c97d6758cea14a",
     "Manuscript analysis specification": "d092ab0cfbe2472c21f55758a221518b5bc0aca921284a54992e0f4a75bf9fa0",
-    "Manuscript DGP distribution source table": "62913217bed7cc6a26405bcd35f2d401d44786ae9c46855bf91d2bdfd0a1c451"
-  }
+    "Manuscript DGP distribution source table": "62913217bed7cc6a26405bcd35f2d401d44786ae9c46855bf91d2bdfd0a1c451",
+    "Manuscript DRS analysis specification": "1c96d98e751ece889d6541c69defbd6181a37461ebd4cff07760117fd824a026",
+    "Colas progression DRS source table": "da20690ead78c72f5c38aa7608a84c1be043c0cf21cf6c8ffa0526aa0c11aba5"
+  },
+  "definition_version": "paper_20260826_trajectory_paired_tple_nightfixed_sli_v2",
+  "drs_formula": "z_NGT(HAD) + 0.25 * [(1 h) * TPLE]_+ * SLI"
 }

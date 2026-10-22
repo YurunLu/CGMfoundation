@@ -97,12 +97,15 @@ The manuscript risk score is
 
 ```text
 DRS = (HAD - HAD_NGT_median) / HAD_NGT_robust_scale
-      + 0.25 * [(1 h) * TPLE + SLI]
+      + 0.25 * max((1 h) * TPLE, 0) * SLI
 ```
 
 The fixed HAD center is `-0.1031305349141052`, and the robust scale is
-`0.4772495026293811`. The score does
-not normalize against the evaluated cohort. The formula and follow-up window
+`0.4772495026293811` (1.4826 times the NGT median absolute deviation).
+Only positive TPLE contributes to the interaction with SLI. TPLE is in `h^-1`,
+so the one-hour factor makes the divergence term dimensionless. Undefined TPLE
+or SLI yields an undefined DRS. The score uses the frozen reference calibration
+across evaluation cohorts. The formula and follow-up window
 were selected exploratorily and require independent prospective validation.
 
 ## Reuse with another encoder
@@ -134,6 +137,7 @@ The first command validates bundled file hashes, reference geometry, calibration
 and numerical-function checksums. Optional checkpoint verification checks the file
 SHA-256 and strict model loading. The validation summary covers parameter
 identity, manuscript calculation, and public workflow checks. It covers the 821 three-group Nicheng records in
-the manuscript figure and the 208-record Colas DRS source table. Checkpoint
+the manuscript figure, TPLE and SLI for 208 Colas recordings, and DRS for the
+188-participant Colas progression cohort. Checkpoint
 identity, model hyperparameters, input alignment, and validity-mask checks are
 recorded in the artifact manifest and validation report.

@@ -25,5 +25,13 @@ SLI uses log-transformed nighttime relaxation time. HAD normalization for DRS us
 the frozen NGT median and robust scale. Use the same reference and calibration for
 all evaluation recordings; evaluation labels are not required.
 
+```text
+DRS = (HAD - NGT_median) / NGT_robust_scale
+      + 0.25 * max((1 h) * TPLE, 0) * SLI
+```
+
+The frozen HAD median is `-0.1031305349141052`, and the robust scale is
+`0.4772495026293811`. Undefined TPLE or SLI produces an undefined DRS.
+
 These files contain aggregate parameters. Participant CGM recordings and clinical
 labels are not distributed in this repository.

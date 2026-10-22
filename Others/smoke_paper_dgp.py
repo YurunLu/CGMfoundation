@@ -1,4 +1,4 @@
-"""Check manuscript TPLE gap handling and published-checkpoint rejection."""
+"""Check manuscript DRS, TPLE gap handling, and checkpoint rejection."""
 from __future__ import annotations
 import json
 from pathlib import Path
@@ -7,6 +7,7 @@ import sys
 import tempfile
 
 import numpy as np
+import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -20,6 +21,18 @@ def main():
     verify(artifact)
     calibration = json.loads((artifact / 'calibration.json').read_text())
     manifest = json.loads((artifact / 'reference_manifest.json').read_text())
+    # Known values distinguish the positive-part interaction from a sum.
+    center, scale = calibration['stats']['HAD']
+    raw = pd.DataFrame(dict(
+        HAD=[center + 2 * scale] * 6, TOB=[0.0] * 6,
+        dynvar_raw=[0.0] * 6, dynhbgi_raw=[0.0] * 6,
+        TPLE=[2.0, -2.0, 0.0, np.nan, 2.0, -2.0],
+        SLI=[3.0, 3.0, 3.0, 3.0, np.nan, np.nan]))
+    scores = assemble(raw, calibration)
+    np.testing.assert_allclose(scores.DRS, [3.5, 2.0, 2.0, np.nan, np.nan, np.nan],
+                               rtol=1e-12, atol=1e-12, equal_nan=True)
+    subset = assemble(raw.iloc[[0, 1]], calibration)
+    np.testing.assert_allclose(subset.DRS, scores.DRS.iloc[[0, 1]])
     # One pair with a known exponential separation defines the one-hour slope.
     index = np.r_[np.arange(5), np.arange(20, 25)]
     pc = np.zeros((10, 5))
@@ -47,6 +60,14 @@ def main():
     reference = artifact / 'glycemic_basin_reference.npz'
     valid_meta = dict(manifest['export_requirements'], checkpoint_sha256=calibration['checkpoint_sha256'])
     validate_calibration(calibration, reference, valid_meta)
+    for stale in [dict(calibration, version=calibration['version'].replace('_v2', '_v1')),
+                  dict(calibration, drs_formula='z_NGT(HAD) + 0.25 * [(1 h) * TPLE + SLI]')]:
+        try:
+            validate_calibration(stale, reference, valid_meta)
+        except ValueError:
+            pass
+        else:
+            raise AssertionError('Incompatible DRS calibration accepted')
     for bad_hash in [None, '0' * 64]:
         meta = dict(valid_meta, checkpoint_sha256=bad_hash)
         try:
@@ -71,7 +92,7 @@ def main():
                                   '--output-dir', str(output)], capture_output=True, text=True)
         assert process.returncode != 0 and 'checkpoint SHA-256' in process.stderr
         assert not output.exists()
-    print('PASS: known one-pair TPLE, missing follow-up, nighttime boundary/centering, short traces, and checkpoint rejection')
+    print('PASS: positive-part DRS interaction, missing scores, fixed calibration, one-pair TPLE, gap handling, nighttime rules, and incompatible-input rejection')
 
 
 if __name__ == '__main__':

@@ -50,9 +50,9 @@
   "calibration_provenance": "Frozen Nicheng NGT summary statistics",
   "files_sha256": {
     "glycemic_basin_reference.npz": "86313a0c42f72d560b041d5296c6d2505641f57892b6ddd467e2791d58f72ccf",
-    "calibration.json": "4ca4cfa53f0900d80155a9710a2ca76b546a743a440b91600091ec6837b0dd4e",
+    "calibration.json": "6de061723b57f0332cbad0a71953ffd3913f4085ef617d6011f34e866fd787b3",
     "export_config.json": "e0fcc31788cfd894b5c8e2bde4e0f57ac322cc1a2402c6270fdd08525cc1cd85",
-    "validation.json": "fc9f4424c464f771c9e4997b6e16af2001bbdf96a6449bb4930968d42acaa286"
+    "validation.json": "a231cf0248e9ea89aea3036b7bd7c614beef2ca1f035d8db5e5aaaba9a9e6e58"
   },
   "source_checksums": {
     "Nicheng reference parameters": "86313a0c42f72d560b041d5296c6d2505641f57892b6ddd467e2791d58f72ccf",
@@ -60,6 +60,9 @@
     "Nicheng glycemic feature summary": "db5c5742a406d77338658109df938428d245e703245463de401a60872ac3c074",
     "Nicheng HAD normalization statistics": "c2b551309a8ba7c8eef722e0645bfe059a090867c2d85a5d42c97d6758cea14a",
     "Manuscript analysis specification": "d092ab0cfbe2472c21f55758a221518b5bc0aca921284a54992e0f4a75bf9fa0",
-    "Manuscript DGP distribution source table": "62913217bed7cc6a26405bcd35f2d401d44786ae9c46855bf91d2bdfd0a1c451"
-  }
+    "Manuscript DGP distribution source table": "62913217bed7cc6a26405bcd35f2d401d44786ae9c46855bf91d2bdfd0a1c451",
+    "Manuscript DRS analysis specification": "1c96d98e751ece889d6541c69defbd6181a37461ebd4cff07760117fd824a026",
+    "Colas progression DRS source table": "da20690ead78c72f5c38aa7608a84c1be043c0cf21cf6c8ffa0526aa0c11aba5"
+  },
+  "definition_version": "paper_20260826_trajectory_paired_tple_nightfixed_sli_v2"
 }

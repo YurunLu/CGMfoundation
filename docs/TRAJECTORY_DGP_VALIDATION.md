@@ -31,8 +31,10 @@ reference fitting, calibration, and output protection.
 
 The manuscript DGP check exercises a matched pulse-response pair with a known
 growth rate, missing follow-up handling, nighttime transition boundaries,
-within-night centering, and insufficient-data rules. It also checks rejection of
-an incorrect checkpoint hash, sample-column origin, or validity policy before
+within-night centering, and insufficient-data rules. It checks the positive-part
+TPLE-SLI interaction, missing DRS values, and fixed-calibration subset invariance.
+It also checks rejection of an incompatible DRS calibration, an incorrect
+checkpoint hash, sample-column origin, or validity policy before
 output files are created.
 
 ## Numerical-function integrity
@@ -48,8 +50,9 @@ functions used by `DGP_paper.py`.
 ## Manuscript calculation checks
 
 The [validation summary](../artifacts/dgp/paper_20260826/validation.json) covers
-the six DGP indices for 821 three-group Nicheng recordings and TPLE, SLI, and DRS
-for 208 Colas recordings. It also records public-command execution and reuse of
+the six DGP indices for 821 three-group Nicheng recordings, TPLE and SLI for
+208 Colas recordings, and DRS for the 188-participant Colas progression cohort.
+It also records public-command execution and reuse of
 the fixed calibration on a recording subset. Definitions and input requirements
 are in the [DGP guide](PAPER_DGP.md).
 

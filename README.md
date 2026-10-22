@@ -157,10 +157,11 @@ python DGP_paper.py --patch-dir outputs/patches/cohort --reference artifacts/dgp
 The analysis also exports the dynamic risk score:
 
 ```text
-DRS = z_NGT(HAD) + 0.25 × [(1 h) × TPLE + SLI]
+DRS = z_NGT(HAD) + 0.25 × max((1 h) × TPLE, 0) × SLI
 ```
 
 Here `z_NGT(HAD)` uses the frozen Nicheng NGT median and robust scale.
+The interaction contributes only when TPLE is positive and increases with SLI.
 DynVar and DynHBGI use frozen NGT means and sample standard deviations.
 TPLE is measured in `h^-1`; SLI is `log(1 + tau)`, where `tau` is the
 night-fixed lag-one relaxation time in 15-minute steps. Missing trajectory-pair
